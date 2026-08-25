@@ -1,0 +1,76 @@
+{
+ "Дерево рішень: програма з вкладених перевірок": {
+  "materials": [
+   {
+    "title": "scikit-learn · Decision Trees",
+    "url": "https://scikit-learn.org/stable/modules/tree.html",
+    "kind": "документація",
+    "note": "Критерії розбиття, обрізання та всі гіперпараметри з поясненням."
+   },
+   {
+    "title": "MLU-Explain · Decision Trees",
+    "url": "https://mlu-explain.github.io/decision-tree/",
+    "kind": "демо",
+    "note": "Інтерактивне пояснення від Amazon: дерево росте на очах, кожне розбиття видно на даних."
+   }
+  ]
+ },
+ "Обрізання дерева за складністю": {
+  "materials": [
+   {
+    "title": "scikit-learn · Post pruning decision trees with cost complexity pruning",
+    "url": "https://scikit-learn.org/stable/auto_examples/tree/plot_cost_complexity_pruning.html",
+    "kind": "документація",
+    "note": "Той самий шлях ccp_alpha, що в коді лекції, з поясненням кожного кроку."
+   }
+  ]
+ },
+ "Випадковий ліс додає випадковість у самі розбиття": {
+  "materials": [
+   {
+    "title": "Breiman L. Random Forests (2001)",
+    "url": "https://link.springer.com/content/pdf/10.1023/A:1010933404324.pdf",
+    "kind": "PDF",
+    "note": "Оригінальна стаття: звідки походить сама ідея та оцінка out-of-bag."
+   },
+   {
+    "title": "MLU-Explain · Random Forest",
+    "url": "https://mlu-explain.github.io/random-forest/",
+    "kind": "демо",
+    "note": "Продовження: чому багато дерев разом стабільніші за одне."
+   }
+  ]
+ },
+ "Корельовані ознаки ламають обидві міри": {
+  "materials": [
+   {
+    "title": "scikit-learn · Permutation Importance with Multicollinear Features",
+    "url": "https://scikit-learn.org/stable/auto_examples/inspection/plot_permutation_importance_multicollinear.html",
+    "kind": "документація",
+    "note": "Готовий рецепт: кластеризація ознак за кореляцією перед вимірюванням важливості."
+   },
+   {
+    "title": "Molnar C. Interpretable Machine Learning",
+    "url": "https://christophm.github.io/interpretable-ml-book/feature-importance.html",
+    "kind": "книга",
+    "note": "Розділ про важливість ознак: що вона означає й чого не означає."
+   }
+  ]
+ },
+ "Бустинг: кожне наступне дерево вчиться на залишках": {
+  "materials": [
+   {
+    "title": "Friedman J. Greedy Function Approximation: A Gradient Boosting Machine (2001)",
+    "url": "https://projecteuclid.org/journals/annals-of-statistics/volume-29/issue-5/Greedy-function-approximation-A-gradient-boosting-machine/10.1214/aos/1013203451.full",
+    "kind": "стаття",
+    "note": "Стаття, з якої походить градієнтний бустинг."
+   },
+   {
+    "title": "Gradient Boosting explained — інтерактивно",
+    "url": "https://arogozhnikov.github.io/2016/06/24/gradient_boosting_explained.html",
+    "kind": "демо",
+    "note": "Дерева додаються по одному, і видно, як змінюється прогноз."
+   }
+  ]
+ }
+}

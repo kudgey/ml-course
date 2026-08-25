@@ -1,0 +1,27 @@
+{
+  "Позиційне кодування додає моделі відчуття порядку": {
+    "widget": "PositionalLab",
+    "materials": [
+      {"title": "Vaswani та ін. Attention Is All You Need (2017)", "url": "https://arxiv.org/pdf/1706.03762",
+       "kind": "PDF", "note": "Оригінальна стаття: формула позиційного кодування — розділ 3.5."},
+      {"title": "Amirhossein Kazemnejad — чому саме синусоїди", "url": "https://kazemnejad.com/blog/transformer_architecture_positional_encoding/",
+       "kind": "стаття", "note": "Детальний розбір, чому скалярний добуток двох кодувань залежить лише від відстані."}
+    ]
+  },
+  "Наскрізний приклад: «кіт п'є молоко»": {
+    "materials": [
+      {"title": "The Illustrated Transformer", "url": "https://jalammar.github.io/illustrated-transformer/",
+       "kind": "стаття", "note": "Найвідоміше візуальне пояснення трансформера — саме звідти схеми цієї лекції."},
+      {"title": "The Annotated Transformer — стаття як робочий код", "url": "https://nlp.seas.harvard.edu/annotated-transformer/",
+       "kind": "код", "note": "Гарвардський ноутбук: кожен абзац оригінальної статті поруч із реалізацією на PyTorch."}
+    ]
+  },
+  "Кілька голів дивляться на різні речі": {
+    "materials": [
+      {"title": "BertViz — інтерактивна візуалізація уваги", "url": "https://github.com/jessevig/bertviz",
+       "kind": "код", "note": "Запускається в Colab: видно, куди дивиться кожна голова на справжньому реченні."},
+      {"title": "Clark та ін. What Does BERT Look At?", "url": "https://arxiv.org/abs/1906.04341",
+       "kind": "стаття", "note": "Аналіз того, які саме мовні відношення знаходять окремі голови."}
+    ]
+  }
+}

@@ -1,0 +1,81 @@
+{
+ "Дані лекції: діагностика пухлин молочної залози": {
+  "materials": [
+   {
+    "title": "UCI · Breast Cancer Wisconsin (Diagnostic)",
+    "url": "https://archive.ics.uci.edu/dataset/17/breast+cancer+wisconsin+diagnostic",
+    "kind": "дані",
+    "note": "Первинне джерело набору з описом того, як вимірювали кожну з 30 ознак."
+   },
+   {
+    "title": "scikit-learn · опис набору Breast Cancer",
+    "url": "https://scikit-learn.org/stable/datasets/toy_dataset.html#breast-cancer-dataset",
+    "kind": "документація",
+    "note": "Перелік усіх 30 ознак із поясненням, що саме вимірювали на зображенні клітинного ядра."
+   }
+  ]
+ },
+ "Перехресна ентропія": {
+  "materials": [
+   {
+    "title": "Distill · Visual Information Theory",
+    "url": "https://colah.github.io/posts/2015-09-Visual-Information/",
+    "kind": "стаття",
+    "note": "Візуальне пояснення ентропії, перехресної ентропії та розходження Кульбака—Лейблера."
+   }
+  ]
+ },
+ "Частка правильних відповідей — оманлива метрика": {
+  "materials": [
+   {
+    "title": "scikit-learn · Metrics and scoring",
+    "url": "https://scikit-learn.org/stable/modules/model_evaluation.html#classification-metrics",
+    "kind": "документація",
+    "note": "Формули всіх метрик класифікації в одному місці."
+   },
+   {
+    "title": "Google · Classification: Accuracy, Precision, Recall",
+    "url": "https://developers.google.com/machine-learning/crash-course/classification/accuracy-precision-recall",
+    "kind": "курс",
+    "note": "Той самий приклад із рідкісним класом, розібраний покроково."
+   }
+  ],
+  "md": "\nПорахуймо той самий скринінг на 1000 пацієнтках, серед яких 10 злоякісних пухлин:\n\n| Модель | Знайдено злоякісних | Хибних тривог | Частка правильних | Придатність |\n|---|---|---|---|---|\n| «завжди доброякісна» | 0 з 10 | 0 | **99,0 %** | нульова |\n| «завжди злоякісна» | 10 з 10 | 990 | 1,0 % | нульова |\n| реальна модель | 9 з 10 | 12 | 97,9 % | висока |\n\nНайвищу частку правильних відповідей має модель, яка не знайшла жодної хворої,\nа найкорисніша з трьох виглядає за цією метрикою гірше за неї.\n"
+ },
+ "Крива точність–повнота чесніша при дисбалансі": {
+  "materials": [
+   {
+    "title": "Saito T., Rehmsmeier M. The Precision-Recall Plot Is More Informative than the ROC Plot",
+    "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0118432",
+    "kind": "стаття",
+    "note": "Стаття в PLOS ONE, де показано на симуляціях, коли саме ROC вводить в оману."
+   },
+   {
+    "title": "scikit-learn · Precision-Recall",
+    "url": "https://scikit-learn.org/stable/auto_examples/model_selection/plot_precision_recall.html",
+    "kind": "документація",
+    "note": "Готовий приклад побудови обох кривих на одному наборі."
+   }
+  ]
+ },
+ "Мультиклас: one-vs-rest і softmax": {
+  "materials": [
+   {
+    "title": "scikit-learn · Multiclass and multioutput algorithms",
+    "url": "https://scikit-learn.org/stable/modules/multiclass.html",
+    "kind": "документація",
+    "note": "Які моделі підтримують мультиклас напряму, а які загортаються в one-vs-rest."
+   }
+  ]
+ },
+ "Обмеження логістичної регресії": {
+  "materials": [
+   {
+    "title": "scikit-learn · Probability calibration",
+    "url": "https://scikit-learn.org/stable/modules/calibration.html",
+    "kind": "документація",
+    "note": "Що робити, коли ймовірності моделі систематично завищені або занижені."
+   }
+  ]
+ }
+}

@@ -1,0 +1,89 @@
+{
+ "Три ролі даних: навчання, валідація, тест": {
+  "materials": [
+   {
+    "title": "scikit-learn · Cross-validation: evaluating estimator performance",
+    "url": "https://scikit-learn.org/stable/modules/cross_validation.html",
+    "kind": "документація",
+    "note": "Усі схеми розбиття з малюнками: KFold, StratifiedKFold, GroupKFold і коли яку брати."
+   },
+   {
+    "title": "Google · Machine Learning Crash Course: Training and Test Sets",
+    "url": "https://developers.google.com/machine-learning/crash-course/overfitting/dividing-datasets",
+    "kind": "курс",
+    "note": "Коротке пояснення, навіщо потрібна третя вибірка окрім тренувальної й тестової."
+   }
+  ]
+ },
+ "Розклад помилки на три доданки": {
+  "materials": [
+   {
+    "title": "Fortmann-Roe S. Understanding the Bias–Variance Tradeoff",
+    "url": "https://scott.fortmann-roe.com/docs/BiasVariance.html",
+    "kind": "стаття",
+    "note": "Класичне пояснення з мішенями й стрілами — те саме розкладання, але наочно."
+   },
+   {
+    "title": "Hastie T. та ін. The Elements of Statistical Learning",
+    "url": "https://hastie.su.domains/ElemStatLearn/",
+    "kind": "PDF",
+    "note": "Розділ 7 — повне виведення розкладання й обговорення його меж."
+   }
+  ]
+ },
+ "Подвійний спуск: сучасне уточнення U-кривої": {
+  "materials": [
+   {
+    "title": "Belkin M. та ін. Reconciling modern ML practice and the bias–variance trade-off",
+    "url": "https://arxiv.org/abs/1812.11118",
+    "kind": "стаття",
+    "note": "Стаття, де подвійний спуск описано вперше системно; на arXiv доступна повна версія тієї самої роботи з PNAS."
+   },
+   {
+    "title": "OpenAI · Deep Double Descent",
+    "url": "https://openai.com/index/deep-double-descent/",
+    "kind": "стаття",
+    "note": "Той самий ефект на сучасних мережах, із графіками за розміром моделі й тривалістю навчання."
+   }
+  ]
+ },
+ "Lasso: штраф за суму модулів": {
+  "materials": [
+   {
+    "title": "Tibshirani R. Regression Shrinkage and Selection via the Lasso (1996)",
+    "url": "https://www.jstor.org/stable/2346178",
+    "kind": "стаття",
+    "note": "Оригінальна стаття, у якій запропоновано lasso."
+   },
+   {
+    "title": "scikit-learn · Lasso and Elastic Net paths",
+    "url": "https://scikit-learn.org/stable/auto_examples/linear_model/plot_lasso_coordinate_descent_path.html",
+    "kind": "документація",
+    "note": "Як будувати шляхи коефіцієнтів самостійно й що з них видно."
+   }
+  ]
+ },
+ "Витік даних робить оцінку безглуздою": {
+  "materials": [
+   {
+    "title": "Kapoor S., Narayanan A. Leakage and the Reproducibility Crisis in ML-based Science",
+    "url": "https://arxiv.org/abs/2207.07048",
+    "kind": "стаття",
+    "note": "Витік знайдено в роботах із 17 наукових галузей — огляд типових механізмів."
+   }
+  ]
+ },
+ "Обмеження регуляризації": {
+  "materials": [
+   {
+    "title": "Zhang C. та ін. Understanding Deep Learning Requires Rethinking Generalization",
+    "url": "https://arxiv.org/pdf/1611.03530",
+    "kind": "PDF",
+    "note": "Мережі вивчають напам'ять випадкові мітки навіть із регуляризацією — межа класичного пояснення узагальнення."
+   }
+  ]
+ },
+ "Три доданки в числах": {
+  "widget": "BiasVarianceLab"
+ }
+}

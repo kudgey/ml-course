@@ -1,0 +1,88 @@
+{
+ "Напрямки в просторі слів кодують відношення": {
+  "widget": "WordVectorLab",
+  "materials": [
+   {
+    "title": "Mikolov та ін. Linguistic Regularities in Continuous Space Word Representations",
+    "url": "https://aclanthology.org/N13-1090.pdf",
+    "kind": "PDF",
+    "note": "Стаття, у якій уперше показано, що king − man + woman ≈ queen."
+   },
+   {
+    "title": "TensorFlow Embedding Projector",
+    "url": "https://projector.tensorflow.org/",
+    "kind": "демо",
+    "note": "Інтерактивне тривимірне вкладення справжніх word2vec і GloVe: можна крутити й шукати сусідів."
+   }
+  ]
+ },
+ "GloVe: як зважити пари слів": {
+  "materials": [
+   {
+    "title": "Pennington та ін. GloVe: Global Vectors for Word Representation",
+    "url": "https://nlp.stanford.edu/pubs/glove.pdf",
+    "kind": "PDF",
+    "note": "Оригінальна стаття; там же — таблиця результатів на задачах аналогій."
+   },
+   {
+    "title": "GloVe — готові вектори для завантаження",
+    "url": "https://nlp.stanford.edu/projects/glove/",
+    "kind": "дані",
+    "note": "Ті самі вектори, що вантажить код лекції: 50, 100, 200 і 300 вимірів."
+   }
+  ]
+ },
+ "Три покоління: ELMo, GPT і BERT": {
+  "materials": [
+   {
+    "title": "Devlin та ін. BERT: Pre-training of Deep Bidirectional Transformers",
+    "url": "https://arxiv.org/pdf/1810.04805",
+    "kind": "PDF",
+    "note": "Стаття про BERT — модель, що дала контекстні подання замість одного вектора на слово."
+   },
+   {
+    "title": "The Illustrated BERT, ELMo, and co.",
+    "url": "https://jalammar.github.io/illustrated-bert/",
+    "kind": "стаття",
+    "note": "Візуальне пояснення різниці між трьома поколіннями подань."
+   }
+  ]
+ },
+ "Класифікація без жодного навчального прикладу": {
+  "materials": [
+   {
+    "title": "Radford A. та ін. Learning Transferable Visual Models From Natural Language Supervision (CLIP)",
+    "url": "https://arxiv.org/pdf/2103.00020",
+    "kind": "PDF",
+    "note": "Стаття про CLIP: класифікація без жодного розміченого прикладу цільового класу."
+   },
+   {
+    "title": "OpenAI · CLIP",
+    "url": "https://openai.com/index/clip/",
+    "kind": "стаття",
+    "note": "Коротший виклад із прикладами та обговоренням меж методу."
+   }
+  ]
+ },
+ "Обмеження навчання подань": {
+  "materials": [
+   {
+    "title": "Bender E. та ін. On the Dangers of Stochastic Parrots",
+    "url": "https://dl.acm.org/doi/pdf/10.1145/3442188.3445922",
+    "kind": "PDF",
+    "note": "Що саме подання переймають із корпусу разом зі статистикою мови."
+   }
+  ]
+ },
+ "Одне слово має кілька значень": {
+  "md": "\n| Речення | Що означає «bank» | Вектор GloVe |\n|---|---|---|\n| *He sat on the river **bank**.* | берег річки | той самий |\n| *She works at a **bank**.* | фінансова установа | той самий |\n| *The plane will **bank** left.* | крен літака | той самий |\n\nОдин вектор мусить обслуговувати всі три значення, тому опиняється десь між\nними — і не описує жодного. Саме цю ваду знімають контекстні подання, до яких\nпереходимо далі.\n",
+  "materials": [
+   {
+    "title": "Peters M. та ін. Deep contextualized word representations (ELMo)",
+    "url": "https://arxiv.org/pdf/1802.05365",
+    "kind": "PDF",
+    "note": "Стаття, у якій показано виграш від того, що вектор слова залежить від речення."
+   }
+  ]
+ }
+}

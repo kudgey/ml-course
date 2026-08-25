@@ -1,0 +1,61 @@
+{
+ "Прямий процес: від цифри до чистого шуму": {
+  "widget": "DiffusionLab",
+  "materials": [
+   {
+    "title": "Ho та ін. Denoising Diffusion Probabilistic Models (2020)",
+    "url": "https://arxiv.org/pdf/2006.11239",
+    "kind": "PDF",
+    "note": "Стаття, з якої почалися сучасні дифузійні моделі."
+   },
+   {
+    "title": "Weng L. What are Diffusion Models?",
+    "url": "https://lilianweng.github.io/posts/2021-07-11-diffusion-models/",
+    "kind": "стаття",
+    "note": "Розгорнутий конспект із виведенням усіх формул прямого і зворотного процесу."
+   }
+  ]
+ },
+ "Змагальні мережі: гра двох гравців": {
+  "materials": [
+   {
+    "title": "Goodfellow та ін. Generative Adversarial Networks (2014)",
+    "url": "https://arxiv.org/pdf/1406.2661",
+    "kind": "PDF",
+    "note": "Оригінальна стаття про GAN."
+   },
+   {
+    "title": "GAN Lab — навчання GAN просто в браузері",
+    "url": "https://poloclub.github.io/ganlab/",
+    "kind": "демо",
+    "note": "Видно, як генератор і дискримінатор перетягують один одного, і як виглядає колапс мод."
+   }
+  ]
+ },
+ "FGSM: один крок уздовж градієнта": {
+  "materials": [
+   {
+    "title": "Goodfellow та ін. Explaining and Harnessing Adversarial Examples",
+    "url": "https://arxiv.org/pdf/1412.6572",
+    "kind": "PDF",
+    "note": "Стаття, де запропоновано FGSM — той самий один крок уздовж знаку градієнта."
+   },
+   {
+    "title": "CleverHans — бібліотека атак і захистів",
+    "url": "https://github.com/cleverhans-lab/cleverhans",
+    "kind": "код",
+    "note": "Еталонні реалізації FGSM, PGD та інших атак."
+   }
+  ]
+ },
+ "Обмеження й відкриті питання": {
+  "materials": [
+   {
+    "title": "Amodei D. та ін. Concrete Problems in AI Safety",
+    "url": "https://arxiv.org/pdf/1606.06565",
+    "kind": "PDF",
+    "note": "Перелік технічних, а не філософських проблем: побічні ефекти, зловживання винагородою, безпечне дослідження."
+   }
+  ]
+ }
+}

@@ -1,0 +1,79 @@
+{
+ "Універсальна апроксимація: доведення картинкою": {
+  "materials": [
+   {
+    "title": "Nielsen M. A visual proof that neural nets can compute any function",
+    "url": "http://neuralnetworksanddeeplearning.com/chap4.html",
+    "kind": "книга",
+    "note": "Той самий доказ картинкою, але інтерактивний: повзунки міняють ваги, і видно, як складається сходинка."
+   },
+   {
+    "title": "Cybenko G. Approximation by superpositions of a sigmoidal function (1989)",
+    "url": "https://hal.science/hal-03753170/document",
+    "kind": "PDF",
+    "note": "Оригінальна теорема про універсальну апроксимацію."
+   }
+  ]
+ },
+ "Навчання мережі — невипукла задача": {
+  "materials": [
+   {
+    "title": "Li H. та ін. Visualizing the Loss Landscape of Neural Nets",
+    "url": "https://arxiv.org/abs/1712.09913",
+    "kind": "стаття",
+    "note": "Тривимірні зрізи ландшафту втрат: видно, як архітектура змінює його форму."
+   },
+   {
+    "title": "TensorFlow Playground",
+    "url": "https://playground.tensorflow.org/",
+    "kind": "демо",
+    "note": "Мережа навчається просто в браузері: змініть активацію, ширину чи темп і подивіться, що станеться."
+   }
+  ]
+ },
+ "Зворотне поширення: ланцюгове правило з пам'яттю": {
+  "materials": [
+   {
+    "title": "Karpathy A. Hacker's guide to Neural Networks",
+    "url": "https://karpathy.github.io/neuralnets/",
+    "kind": "стаття",
+    "note": "Зворотне поширення з нуля на простих виразах — саме те, що варто написати руками бодай раз."
+   },
+   {
+    "title": "3Blue1Brown · What is backpropagation really doing?",
+    "url": "https://www.youtube.com/watch?v=Ilg3gGewQ5U",
+    "kind": "відео",
+    "note": "Візуальне пояснення того самого ланцюгового правила."
+   }
+  ]
+ },
+ "Момент і Adam прискорюють спуск": {
+  "materials": [
+   {
+    "title": "Kingma D., Ba J. Adam: A Method for Stochastic Optimization",
+    "url": "https://arxiv.org/pdf/1412.6980",
+    "kind": "PDF",
+    "note": "Оригінальна стаття з псевдокодом алгоритму."
+   },
+   {
+    "title": "PyTorch · torch.optim",
+    "url": "https://pytorch.org/docs/stable/optim.html",
+    "kind": "документація",
+    "note": "Усі оптимізатори з формулами оновлення й типовими значеннями параметрів."
+   }
+  ]
+ },
+ "Межі теореми про універсальну апроксимацію": {
+  "md": "\n| Теорема гарантує | Теорема не гарантує |\n|---|---|\n| потрібна мережа **існує** | що градієнтний спуск її знайде |\n| одного прихованого шару досить | що ширина буде розумною — вона може зростати експоненційно |\n| наближення на **компакті** | поведінку за межами області, де були дані |\n| наближення самої функції | що узагальнення буде добрим на нових даних |\n\nПрактичний наслідок один: теорема пояснює, чому мережі варто пробувати, і нічого\nне каже про те, як їх навчати. Усе інше в цій лекції — саме про друге.\n"
+ },
+ "Обмеження нейронних мереж": {
+  "materials": [
+   {
+    "title": "Sculley D. та ін. Hidden Technical Debt in Machine Learning Systems",
+    "url": "https://proceedings.neurips.cc/paper_files/paper/2015/file/86df7dcfd896fcaf2674f757a2463eba-Paper.pdf",
+    "kind": "PDF",
+    "note": "Чому навчена мережа — найдешевша частина системи, і скільки коштує все решта."
+   }
+  ]
+ }
+}

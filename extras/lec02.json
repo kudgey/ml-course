@@ -1,0 +1,70 @@
+{
+ "Дані лекції: 20 640 округів Каліфорнії": {
+  "materials": [
+   {
+    "title": "Géron A. Hands-On Machine Learning — наскрізний проєкт на цьому самому наборі",
+    "url": "https://github.com/ageron/handson-ml3/blob/main/02_end_to_end_machine_learning_project.ipynb",
+    "kind": "код",
+    "note": "Той самий California Housing розібрано від завантаження до розгортання моделі; ноутбук виконуваний."
+   },
+   {
+    "title": "scikit-learn · fetch_california_housing",
+    "url": "https://scikit-learn.org/stable/modules/generated/sklearn.datasets.fetch_california_housing.html",
+    "kind": "дані",
+    "note": "Опис усіх восьми ознак і застереження про цензуровану цільову змінну."
+   }
+  ]
+ },
+ "Опуклість прибирає погані локальні мінімуми": {
+  "materials": [
+   {
+    "title": "Boyd S., Vandenberghe L. Convex Optimization",
+    "url": "https://web.stanford.edu/~boyd/cvxbook/bv_cvxbook.pdf",
+    "kind": "PDF",
+    "note": "Стандартний підручник; розділ 3 — означення опуклості та її наслідки для оптимізації. Доступний безкоштовно."
+   }
+  ]
+ },
+ "Нормальні рівняння: точна відповідь без ітерацій": {
+  "materials": [
+   {
+    "title": "MIT 18.06 · Linear Algebra, лекція про проєкції та найменші квадрати",
+    "url": "https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/resources/lecture-16-projection-matrices-and-least-squares/",
+    "kind": "відео",
+    "note": "Гілберт Стренг виводить нормальні рівняння геометрично — через проєкцію на простір стовпців."
+   },
+   {
+    "title": "NumPy · linalg.lstsq",
+    "url": "https://numpy.org/doc/stable/reference/generated/numpy.linalg.lstsq.html",
+    "kind": "документація",
+    "note": "Чому в реальному коді беруть саме lstsq, а не обертання матриці."
+   }
+  ]
+ },
+ "Стохастичний градієнтний спуск": {
+  "materials": [
+   {
+    "title": "Ruder S. An overview of gradient descent optimization algorithms",
+    "url": "https://www.ruder.io/optimizing-gradient-descent/",
+    "kind": "стаття",
+    "note": "Оглядова стаття про всі варіанти спуску — від пакетного до Adam, з анімаціями."
+   },
+   {
+    "title": "Distill · Why Momentum Really Works",
+    "url": "https://distill.pub/2017/momentum/",
+    "kind": "демо",
+    "note": "Інтерактивне пояснення, чому імпульс прискорює спуск у витягнутих ярах."
+   }
+  ]
+ },
+ "Графік залишків виявляє системну ваду": {
+  "materials": [
+   {
+    "title": "Common pitfalls in the interpretation of coefficients of linear models",
+    "url": "https://scikit-learn.org/stable/auto_examples/inspection/plot_linear_model_coefficient_interpretation.html",
+    "kind": "документація",
+    "note": "Розгорнутий приклад: чому коефіцієнти не можна читати як «важливість ознаки»."
+   }
+  ]
+ }
+}

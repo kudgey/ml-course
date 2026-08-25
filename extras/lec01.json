@@ -1,0 +1,71 @@
+{
+ "Пропуски заповнюють, а категорії кодують числами": {
+  "widget": "PreprocessLab",
+  "materials": [
+   {
+    "title": "scikit-learn · ColumnTransformer",
+    "url": "https://scikit-learn.org/stable/modules/generated/sklearn.compose.ColumnTransformer.html",
+    "kind": "документація",
+    "note": "Різні перетворення для різних стовпців в одному об'єкті — саме те, що робить код вище."
+   },
+   {
+    "title": "scikit-learn · Common pitfalls: витік даних",
+    "url": "https://scikit-learn.org/stable/common_pitfalls.html#data-leakage",
+    "kind": "документація",
+    "note": "Чому медіану для заповнення можна рахувати тільки за навчальною частиною."
+   }
+  ]
+ },
+ "Набір даних лекції: пасажири «Титаніка»": {
+  "materials": [
+   {
+    "title": "Encyclopedia Titanica — первинні дані про пасажирів",
+    "url": "https://www.encyclopedia-titanica.org/titanic-passenger-list/",
+    "kind": "дані",
+    "note": "Звідки походить набір: поіменний список пасажирів із документів 1912 року."
+   },
+   {
+    "title": "seaborn · load_dataset",
+    "url": "https://seaborn.pydata.org/generated/seaborn.load_dataset.html",
+    "kind": "документація",
+    "note": "Набір вантажиться одним рядком: sns.load_dataset('titanic')."
+   }
+  ]
+ },
+ "Кореляція не є причинністю": {
+  "materials": [
+   {
+    "title": "Spurious Correlations — колекція випадкових збігів",
+    "url": "https://www.tylervigen.com/spurious-correlations",
+    "kind": "демо",
+    "note": "Десятки графіків із кореляцією понад 0,9 між величинами, що не мають спільної причини."
+   },
+   {
+    "title": "Pearl J., Mackenzie D. The Book of Why",
+    "url": "https://bayes.cs.ucla.edu/WHY/",
+    "kind": "книга",
+    "note": "Класична книга про те, чим причинність відрізняється від залежності в даних."
+   }
+  ]
+ },
+ "Витік даних дає підозріло ідеальний результат": {
+  "materials": [
+   {
+    "title": "Kapoor S., Narayanan A. Leakage and the Reproducibility Crisis in ML-based Science",
+    "url": "https://arxiv.org/abs/2207.07048",
+    "kind": "стаття",
+    "note": "Огляд 294 наукових робіт із 17 галузей: витік даних знайдено в кожній із них."
+   }
+  ]
+ },
+ "Обмеження машинного навчання": {
+  "materials": [
+   {
+    "title": "Wolpert D., Macready W. No Free Lunch Theorems for Optimization",
+    "url": "https://ti.arc.nasa.gov/m/profile/dhw/papers/78.pdf",
+    "kind": "PDF",
+    "note": "Формальний доказ того, що універсально найкращого алгоритму не існує: перевага на одному класі задач оплачується програшем на іншому."
+   }
+  ]
+ }
+}

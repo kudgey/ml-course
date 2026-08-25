@@ -1,0 +1,38 @@
+{
+  "Без стандартизації PCA слухає найбільшу ознаку": {
+    "materials": [
+      {"title": "scikit-learn · Importance of Feature Scaling", "url": "https://scikit-learn.org/stable/auto_examples/preprocessing/plot_scaling_importance.html",
+       "kind": "документація", "note": "Той самий ефект на тому самому наборі Wine, з числами."},
+      {"title": "Setosa · Principal Component Analysis explained visually", "url": "https://setosa.io/ev/principal-component-analysis/",
+       "kind": "демо", "note": "Обертайте хмару точок і дивіться, як змінюються головні компоненти."}
+    ]
+  },
+  "Власні обличчя: компоненти, які видно очима": {
+    "materials": [
+      {"title": "Turk M., Pentland A. Eigenfaces for Recognition (1991)", "url": "https://www.face-rec.org/algorithms/PCA/jcn.pdf",
+       "kind": "PDF", "note": "Стаття, з якої походить сам термін «власні обличчя»."},
+      {"title": "scikit-learn · Faces dataset decompositions", "url": "https://scikit-learn.org/stable/auto_examples/decomposition/plot_faces_decomposition.html",
+       "kind": "документація", "note": "PCA, NMF і словникове навчання на одному наборі облич — видно різницю між розкладами."}
+    ]
+  },
+  "NMF: розклад на невід'ємні частини": {
+    "materials": [
+      {"title": "Lee D., Seung S. Learning the parts of objects by non-negative matrix factorization (1999)", "url": "https://www.nature.com/articles/44565",
+       "kind": "стаття", "note": "Стаття в Nature: чому невід'ємність дає саме «частини», а не довільні компоненти."}
+    ]
+  },
+  "Приз Netflix зробив матричний розклад стандартом": {
+    "materials": [
+      {"title": "Koren Y., Bell R., Volinsky C. Matrix Factorization Techniques for Recommender Systems", "url": "https://datajobs.com/data-science-repo/Recommender-Systems-[Netflix].pdf",
+       "kind": "PDF", "note": "Стаття команди-переможця: усі добавки, про які йшлося на попередніх картках."},
+      {"title": "MovieLens — набори даних GroupLens", "url": "https://grouplens.org/datasets/movielens/",
+       "kind": "дані", "note": "Той самий ml-100k, що в коді лекції, і більші версії для експериментів."}
+    ]
+  },
+  "Ядровий PCA розгортає нелінійну структуру": {
+    "materials": [
+      {"title": "scikit-learn · Kernel PCA", "url": "https://scikit-learn.org/stable/auto_examples/decomposition/plot_kernel_pca.html",
+       "kind": "документація", "note": "Порівняння звичайного та ядрового PCA на тих самих концентричних колах."}
+    ]
+  }
+}

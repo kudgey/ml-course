@@ -1,0 +1,79 @@
+{
+ "K-means++ обирає стартові центри розумно": {
+  "materials": [
+   {
+    "title": "Arthur D., Vassilvitskii S. k-means++: The Advantages of Careful Seeding (2007)",
+    "url": "https://theory.stanford.edu/~sergei/papers/kMeansPP-soda.pdf",
+    "kind": "PDF",
+    "note": "Оригінальна стаття з доведенням логарифмічної гарантії якості."
+   },
+   {
+    "title": "Наочна демонстрація k-means у браузері",
+    "url": "https://www.naftaliharris.com/blog/visualizing-k-means-clustering/",
+    "kind": "демо",
+    "note": "Розставте центроїди мишею й покроково прокрутіть ітерації на різних формах даних."
+   }
+  ]
+ },
+ "Вибір K: метод ліктя і середній силует": {
+  "materials": [
+   {
+    "title": "scikit-learn · Selecting the number of clusters with silhouette analysis",
+    "url": "https://scikit-learn.org/stable/auto_examples/cluster/plot_kmeans_silhouette_analysis.html",
+    "kind": "документація",
+    "note": "Силуетний профіль для кількох K поруч — саме той аналіз, що на сусідній картці."
+   },
+   {
+    "title": "scikit-learn · оцінювання кластеризації",
+    "url": "https://scikit-learn.org/stable/modules/clustering.html#clustering-performance-evaluation",
+    "kind": "документація",
+    "note": "Силует, індекс Ренда, взаємна інформація — коли яку міру брати й що вона вимагає знати."
+   }
+  ]
+ },
+ "DBSCAN: кластер як щільна область": {
+  "materials": [
+   {
+    "title": "Ester M. та ін. A Density-Based Algorithm for Discovering Clusters (1996)",
+    "url": "https://cdn.aaai.org/KDD/1996/KDD96-037.pdf",
+    "kind": "PDF",
+    "note": "Оригінальна стаття про DBSCAN — одна з найцитованіших у Data Mining."
+   },
+   {
+    "title": "Наочна демонстрація DBSCAN у браузері",
+    "url": "https://www.naftaliharris.com/blog/visualizing-dbscan-clustering/",
+    "kind": "демо",
+    "note": "Видно, як ε і minPts перетворюють ті самі точки на різну кількість кластерів."
+   }
+  ]
+ },
+ "Ієрархічна кластеризація будує дерево": {
+  "materials": [
+   {
+    "title": "SciPy · Hierarchical clustering (scipy.cluster.hierarchy)",
+    "url": "https://docs.scipy.org/doc/scipy/reference/cluster.hierarchy.html",
+    "kind": "документація",
+    "note": "Побудова дендрограми та всі способи зв'язування в одному модулі."
+   },
+   {
+    "title": "scikit-learn · Comparing different clustering algorithms",
+    "url": "https://scikit-learn.org/stable/auto_examples/cluster/plot_cluster_comparison.html",
+    "kind": "документація",
+    "note": "Одна таблиця: десять алгоритмів на шести формах даних — видно, хто де ламається."
+   }
+  ]
+ },
+ "Суміш гаусіанів знімає обидва обмеження": {
+  "materials": [
+   {
+    "title": "scikit-learn · Gaussian mixture models",
+    "url": "https://scikit-learn.org/stable/modules/mixture.html",
+    "kind": "документація",
+    "note": "Типи коваріаційних матриць і вибір числа компонент за BIC."
+   }
+  ]
+ },
+ "DBSCAN різко реагує на зміну ε": {
+  "widget": "DbscanLab"
+ }
+}

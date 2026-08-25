@@ -1,0 +1,77 @@
+{
+ "Класичні фільтри, якими ознаки будували до навчання": {
+  "widget": "ConvolutionLab",
+  "materials": [
+   {
+    "title": "Image Kernels — інтерактивне пояснення згортки",
+    "url": "https://setosa.io/ev/image-kernels/",
+    "kind": "демо",
+    "note": "Класична візуалізація Explained Visually: ядро проходить по фотографії піксель за пікселем."
+   },
+   {
+    "title": "Szeliski R. Computer Vision: Algorithms and Applications",
+    "url": "https://szeliski.org/Book/",
+    "kind": "книга",
+    "note": "Розділ 3.2 — лінійна фільтрація й ті самі класичні ядра; книга доступна безкоштовно у PDF."
+   }
+  ]
+ },
+ "LeNet: перша практична згорткова мережа": {
+  "materials": [
+   {
+    "title": "LeCun та ін. Gradient-Based Learning Applied to Document Recognition (1998)",
+    "url": "http://vision.stanford.edu/cs598_spring07/papers/Lecun98.pdf",
+    "kind": "PDF",
+    "note": "Оригінальна стаття про LeNet-5 — та сама архітектура, що на схемі."
+   },
+   {
+    "title": "3D-візуалізація згорткової мережі на MNIST",
+    "url": "https://adamharley.com/nn_vis/cnn/3d.html",
+    "kind": "демо",
+    "note": "Намалюйте цифру мишею і подивіться, як сигнал проходить крізь усі шари."
+   }
+  ]
+ },
+ "AlexNet, 2012: рік, коли все змінилося": {
+  "materials": [
+   {
+    "title": "Krizhevsky та ін. ImageNet Classification with Deep CNNs (2012)",
+    "url": "https://proceedings.neurips.cc/paper_files/paper/2012/file/c399862d3b9d6b76c8436e924a68c45b-Paper.pdf",
+    "kind": "PDF",
+    "note": "Стаття, з якої почалася сучасна історія глибокого навчання."
+   },
+   {
+    "title": "ImageNet — сам набір даних",
+    "url": "https://www.image-net.org/",
+    "kind": "дані",
+    "note": "14 мільйонів зображень, розмічених за 20 тисячами категорій."
+   }
+  ]
+ },
+ "Залишковий блок: додати вхід до виходу": {
+  "materials": [
+   {
+    "title": "He та ін. Deep Residual Learning for Image Recognition (2016)",
+    "url": "https://arxiv.org/pdf/1512.03385",
+    "kind": "PDF",
+    "note": "Стаття про ResNet: саме тут уперше показано, що глибший стек навчається гірше без обхідних з'єднань."
+   },
+   {
+    "title": "Li та ін. Visualizing the Loss Landscape of Neural Nets",
+    "url": "https://arxiv.org/abs/1712.09913",
+    "kind": "стаття",
+    "note": "Наочно показано, як обхідні з'єднання згладжують ландшафт втрат."
+   }
+  ]
+ },
+ "Обмеження згорткових мереж": {
+  "materials": [
+   {
+    "title": "Geirhos R. та ін. ImageNet-trained CNNs are biased towards texture",
+    "url": "https://arxiv.org/pdf/1811.12231",
+    "kind": "PDF",
+    "note": "Згорткові мережі впізнають об'єкт радше за текстурою, ніж за формою — не те, чого від них очікують."
+   }
+  ]
+ }
+}
