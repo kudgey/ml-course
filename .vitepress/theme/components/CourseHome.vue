@@ -66,6 +66,7 @@ const BLOCKS = [
       обмеження. Дані справжні: California Housing, Breast Cancer, Iris, Wine,
       Titanic, MNIST.
     </p>
+    <p class="uk-hero__author">Kirill Riazanovskiy, PhD</p>
   </div>
 
   <div class="uk-blocks">
@@ -90,6 +91,13 @@ const BLOCKS = [
 </template>
 
 <style scoped>
+.uk-hero__author {
+  margin-top: 1.4rem;
+  font-size: 0.95rem;
+  color: var(--vp-c-text-2);
+  border-left: 3px solid var(--uk-accent);
+  padding-left: 0.8rem;
+}
 .uk-block__lead {
   font-size: 0.86rem;
   line-height: 1.5;
