@@ -29,15 +29,13 @@ export default defineConfig({
     nav: [
       { text: 'Лекції', link: '/lectures/01' },
       { text: 'Лабораторні', link: '/labs' },
-      { text: 'Про курс', link: '/about' },
-      { text: 'Для викладача', link: '/teaching' }
+      { text: 'Про курс', link: '/about' }
     ],
     sidebar: [
       { text: 'Курс', items: [
         { text: 'Огляд і структура', link: '/' },
         { text: 'Лабораторні роботи', link: '/labs' },
-        { text: 'Про курс і джерела', link: '/about' },
-        { text: 'Для викладача: хронометраж', link: '/teaching' }
+        { text: 'Про курс і джерела', link: '/about' }
       ]},
     {
       text: "Блок A · Основи та лінійні моделі",
