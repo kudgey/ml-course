@@ -5,3 +5,4 @@ node_modules/
 shot.mjs
 checkbase.mjs
 navtest.mjs
+.vercel
