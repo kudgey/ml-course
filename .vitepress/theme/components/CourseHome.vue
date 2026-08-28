@@ -88,6 +88,32 @@ const BLOCKS = [
     <div class="uk-fact"><b>307</b><span>ілюстрацій</span></div>
     <div class="uk-fact"><b>5</b><span>лабораторних</span></div>
   </div>
+
+  <section class="uk-sources">
+    <h3>Джерела курсу</h3>
+    <p>
+      Структура і послідовність тем спираються на курс
+      <a href="https://epfml.github.io/cs433-2025/">EPFL CS-433 Machine Learning</a>.
+      Педагогічні приклади й теми, яких немає в EPFL, узято з
+      <a href="https://www.students.cs.ubc.ca/~cs-340/">UBC CPSC 340/540</a>,
+      глибша математика — зі <a href="https://cs229.stanford.edu/">Stanford CS229</a>.
+      Схеми глибокого навчання — з
+      <a href="https://d2l.ai/">Dive into Deep Learning</a> та
+      <a href="https://cs231n.github.io/">Stanford CS231n</a>.
+    </p>
+    <p>
+      Там, де жодне з цих джерел не покриває тему, курс спирається на оригінальні
+      статті: Breiman (Random Forests, 2001), Friedman (Gradient Boosting, 2001),
+      Arthur &amp; Vassilvitskii (k-means++, 2007), Ester та ін. (DBSCAN, 1996),
+      He та ін. (ResNet, 2016), Ioffe &amp; Szegedy (Batch Normalization, 2015),
+      Vaswani та ін. (Attention Is All You Need, 2017), Chen та ін. (SimCLR, 2020),
+      Kingma &amp; Welling (VAE, 2014), Goodfellow та ін. (GAN, 2014),
+      Ho та ін. (DDPM, 2020).
+    </p>
+    <p class="uk-sources__note">
+      Повний перелік із посиланнями — в останньому розділі кожної лекції.
+    </p>
+  </section>
 </template>
 
 <style scoped>
@@ -130,6 +156,27 @@ const BLOCKS = [
 }
 .uk-fact span {
   font-size: 0.8rem;
+  color: var(--vp-c-text-3);
+}
+
+.uk-sources {
+  margin-top: 2.5rem;
+  padding-top: 1.8rem;
+  border-top: 1px solid var(--uk-line);
+}
+.uk-sources h3 {
+  margin: 0 0 0.8rem;
+  font-size: 1rem;
+  letter-spacing: -0.01em;
+}
+.uk-sources p {
+  margin: 0 0 0.7rem;
+  font-size: 0.86rem;
+  line-height: 1.6;
+  color: var(--vp-c-text-2);
+  max-width: 78ch;
+}
+.uk-sources__note {
   color: var(--vp-c-text-3);
 }
 </style>

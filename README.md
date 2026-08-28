@@ -81,7 +81,7 @@ npm run dev
 
 ```
 lectures/01.md … 14.md      ГЕНЕРУЮТЬСЯ з ../v2/decks/ — руками не правити
-index.md  labs.md  about.md  сторінки, написані руками
+index.md  labs.md            сторінки, написані руками
 public/figs/own/            166 власних рисунків курсу
 public/figs/ext/            136 зовнішніх схем, завантажених локально
 extras/lecNN.json           шар збагачення: віджети, матеріали, додаткові таблиці
