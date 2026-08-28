@@ -84,8 +84,6 @@ const BLOCKS = [
 
   <div class="uk-facts">
     <div class="uk-fact"><b>14</b><span>лекцій</span></div>
-    <div class="uk-fact"><b>566</b><span>розділів</span></div>
-    <div class="uk-fact"><b>307</b><span>ілюстрацій</span></div>
     <div class="uk-fact"><b>5</b><span>лабораторних</span></div>
   </div>
 
@@ -139,7 +137,8 @@ const BLOCKS = [
 
 .uk-facts {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  max-width: 340px;
   gap: 0.7rem;
   margin: 2.5rem 0 0;
   padding-top: 1.8rem;

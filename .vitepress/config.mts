@@ -10,7 +10,6 @@ export default defineConfig({
   cleanUrls: true,
   // README — інструкція для того, хто збирає, а не сторінка курсу
   srcExclude: ['README.md'],
-  lastUpdated: true,
   markdown: {
     math: true,
     lineNumbers: true,
@@ -86,7 +85,6 @@ export default defineConfig({
     darkModeSwitchTitle: 'Темна тема',
     sidebarMenuLabel: 'Розділи',
     returnToTopLabel: 'Догори',
-    lastUpdatedText: 'Оновлено',
     search: {
       provider: 'local',
       options: {
