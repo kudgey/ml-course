@@ -21,7 +21,7 @@
     "title": "scikit-learn · Selecting the number of clusters with silhouette analysis",
     "url": "https://scikit-learn.org/stable/auto_examples/cluster/plot_kmeans_silhouette_analysis.html",
     "kind": "документація",
-    "note": "Силуетний профіль для кількох K поруч — саме той аналіз, що на сусідній картці."
+    "note": "Силуетний профіль для кількох K поруч — саме той аналіз, що в сусідньому розділі."
    },
    {
     "title": "scikit-learn · оцінювання кластеризації",

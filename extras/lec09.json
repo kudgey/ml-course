@@ -24,7 +24,7 @@
   "Приз Netflix зробив матричний розклад стандартом": {
     "materials": [
       {"title": "Koren Y., Bell R., Volinsky C. Matrix Factorization Techniques for Recommender Systems", "url": "https://datajobs.com/data-science-repo/Recommender-Systems-[Netflix].pdf",
-       "kind": "PDF", "note": "Стаття команди-переможця: усі добавки, про які йшлося на попередніх картках."},
+       "kind": "PDF", "note": "Стаття команди-переможця: усі добавки, про які йшлося в попередніх розділах."},
       {"title": "MovieLens — набори даних GroupLens", "url": "https://grouplens.org/datasets/movielens/",
        "kind": "дані", "note": "Той самий ml-100k, що в коді лекції, і більші версії для експериментів."}
     ]
