@@ -52,6 +52,38 @@ const here = computed(() => {
 
 const pct = (v: number) => (v * 100).toFixed(1).replace('.', ',') + ' %'
 
+/**
+ * Ціна помилки. Поріг, оптимальний за Баєсом, дорівнює C_FP / (C_FP + C_FN) —
+ * але лише за умови, що ймовірності калібровані. Емпіричний оптимум шукається
+ * перебором по самих передбаченнях і на 171 спостереженні може від нього
+ * відрізнятися; обидва числа показуємо поруч саме заради цього порівняння.
+ */
+const cFN = ref(10)
+const cFP = ref(1)
+
+const costAt = (thr: number) => {
+  let fn = 0, fp = 0
+  for (let i = 0; i < P.length; i++) {
+    const pred = P[i] >= thr
+    if (Y[i] === 1) { if (!pred) fn++ } else if (pred) fp++
+  }
+  return fn * cFN.value + fp * cFP.value
+}
+const cost = computed(() => cm.value.fn * cFN.value + cm.value.fp * cFP.value)
+const bayesT = computed(() => cFP.value / (cFP.value + cFN.value))
+
+const best = computed(() => {
+  const grid = [...new Set(P)].sort((a, b) => a - b)
+  let bt = 0.5, bc = Infinity
+  for (const g of grid) {
+    const c = costAt(g)
+    if (c < bc) { bc = c; bt = g }
+  }
+  return { t: bt, cost: bc }
+})
+
+const fmt3 = (v: number) => v.toFixed(3).replace('.', ',')
+
 const PRESETS = [
   { t: 0.1, label: 'скринінг: 0,1' },
   { t: 0.434, label: 'максимум F1: 0,434' },
@@ -84,6 +116,26 @@ const PRESETS = [
       <span>Поріг = <b>{{ t.toFixed(3).replace('.', ',') }}</b></span>
       <input type="range" min="0.01" max="0.99" step="0.001" v-model.number="t" />
     </label>
+
+    <div class="lab__controls">
+      <label class="lab__ctl">
+        <span>Ціна пропущеної пухлини = <b>{{ cFN }}</b></span>
+        <input type="range" min="1" max="50" step="1" v-model.number="cFN" />
+      </label>
+      <label class="lab__ctl">
+        <span>Ціна хибної тривоги = <b>{{ cFP }}</b></span>
+        <input type="range" min="1" max="20" step="1" v-model.number="cFP" />
+      </label>
+    </div>
+
+    <div class="lab__pills">
+      <button class="lab__pill" @click="t = bayesT">
+        поріг за Баєсом: {{ fmt3(bayesT) }}
+      </button>
+      <button class="lab__pill" @click="t = best.t">
+        емпіричний оптимум: {{ fmt3(best.t) }}
+      </button>
+    </div>
 
     <div class="tl__grid">
       <div class="tl__cm">
@@ -131,6 +183,9 @@ const PRESETS = [
       <div class="lab__stat" :class="cm.fn > 2 ? 'is-warm' : 'is-green'">
         <b>{{ cm.fn }}</b><span>пропущено злоякісних пухлин</span>
       </div>
+      <div class="lab__stat" :class="cost <= best.cost ? 'is-green' : 'is-warm'">
+        <b>{{ cost }}</b><span>сумарна ціна помилок; найменша можлива {{ best.cost }}</span>
+      </div>
     </div>
 
     <p class="lab__note">
@@ -139,6 +194,22 @@ const PRESETS = [
       метрика не скаже, який поріг правильний: це вирішує ціна помилки в клініці,
       а не модель. ROC-AUC при цьому не змінюється взагалі — крива описує модель на
       всіх порогах одразу, тому вибір порога вона не підказує.
+    </p>
+
+    <p class="lab__note">
+      Тепер задайте ціну помилок числами — і поріг перестане бути справою смаку.
+      Якщо пропустити злоякісну пухлину вдесятеро дорожче за хибну тривогу,
+      теорія дає поріг <code>C_FP / (C_FP + C_FN)</code>, тобто 0,091: саме там
+      очікувані втрати від двох рішень зрівнюються. Друга кнопка ставить поріг,
+      найкращий на цих конкретних 171 спостереженні, — тут це 0,032. Сумарні
+      втрати виходять однакові, 24, хоча матриці похибок різні: один пропуск
+      і чотирнадцять тривог проти жодного пропуску і двадцяти чотирьох.
+      Байєсів поріг оптимальний для справжніх імовірностей, емпіричний
+      підлаштовується під випадковість маленької вибірки — і на нових даних
+      поступиться. І головне: зрівняйте обидві ціни. Байєсів поріг стане
+      рівно 0,5 — тим самим, який бібліотека ставить за замовчуванням. Отже,
+      0,5 — не константа, а мовчазне припущення, що обидві помилки коштують
+      однаково.
     </p>
   </div>
 </template>
