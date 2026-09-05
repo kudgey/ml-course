@@ -27,9 +27,10 @@ function startCentres(k: number, s: number) {
   return [...idx].map(i => [X[i][0], X[i][1]] as [number, number])
 }
 
-/** Уся історія ітерацій: на кожній — призначення, центроїди й WCSS. */
-const history = computed(() => {
-  let C = startCentres(K.value, seed.value)
+/** Уся історія ітерацій для довільної пари (K, старт) — чиста функція,
+    щоб її можна було звати і для поточних значень, і для перебору стартів. */
+function run(k: number, s: number) {
+  let C = startCentres(k, s)
   const hist: { C: [number, number][]; a: number[]; wcss: number }[] = []
   const assign = (C: [number, number][]) =>
     X.map(p => {
@@ -60,11 +61,30 @@ const history = computed(() => {
     if (!moved) break
   }
   return hist
-})
+}
+
+const history = computed(() => run(K.value, seed.value))
 
 watch([K, seed], () => (step.value = 0))
 const cur = computed(() => history.value[Math.min(step.value, history.value.length - 1)])
 const done = computed(() => step.value >= history.value.length - 1)
+
+/**
+ * Найгірший і найкращий старти з дванадцяти. Рахуємо тим самим кодом, що й
+ * основну історію: жодних заготовлених відповідей, лише перебір варіантів.
+ * Це дає кнопку «невдалий старт» — розділ про K-means++ саме про неї.
+ */
+function finalWcss(k: number, s: number) {
+  const h = run(k, s)
+  return h[h.length - 1].wcss
+}
+const seeds = computed(() => {
+  const out = [] as { s: number; w: number }[]
+  for (let s = 1; s <= 12; s++) out.push({ s, w: finalWcss(K.value, s) })
+  return out
+})
+const worstSeed = computed(() => seeds.value.reduce((a, b) => (b.w > a.w ? b : a)))
+const bestSeed = computed(() => seeds.value.reduce((a, b) => (b.w < a.w ? b : a)))
 
 const W = 460, H = 320, PAD = 30
 const xs = X.map(p => p[0]), ys = X.map(p => p[1])
@@ -114,6 +134,13 @@ const fmt = (v: number) => v.toFixed(1).replace('.', ',')
           <button class="lab__btn" :disabled="done" @click="step = history.length - 1">до збіжності</button>
         </div>
       </div>
+      <div class="lab__ctl">
+        <span>Старти з різним результатом</span>
+        <div class="km__btns">
+          <button class="lab__btn" @click="seed = worstSeed.s; step = 0">невдалий</button>
+          <button class="lab__btn" @click="seed = bestSeed.s; step = 0">найкращий</button>
+        </div>
+      </div>
     </div>
 
     <svg :viewBox="`0 0 ${W} ${H}`" class="km" role="img"
@@ -142,6 +169,11 @@ const fmt = (v: number) => v.toFixed(1).replace('.', ',')
       <div class="lab__stat">
         <b>{{ history.length - 1 }}</b><span>ітерацій до збіжності</span>
       </div>
+      <div class="lab__stat"
+           :class="Math.abs(history[history.length - 1].wcss - bestSeed.w) < 1e-6 ? 'is-green' : 'is-warm'">
+        <b>{{ fmt(bestSeed.w) }} … {{ fmt(worstSeed.w) }}</b>
+        <span>межі підсумкового WCSS по дванадцяти стартах</span>
+      </div>
       <button class="lab__stat km__toggle" @click="showTruth = !showTruth">
         <b>{{ showTruth ? 'види' : 'кластери' }}</b>
         <span>показано зараз — натисніть, щоб порівняти</span>
@@ -149,10 +181,18 @@ const fmt = (v: number) => v.toFixed(1).replace('.', ',')
     </div>
 
     <p class="lab__note">
-      WCSS не зростає жодного разу — це і є гарантія алгоритму. Посуньте повзунок
-      стартових центроїдів: за невдалого старту той самий K дає інше розбиття і гірший
-      WCSS, бо метод сходиться до локального мінімуму. Саме тому бібліотечна реалізація
-      робить десять незалежних запусків і бере найкращий. Перемкніть на «види» — видно,
+      WCSS не зростає жодного разу — це і є гарантія алгоритму. Дві кнопки поруч
+      із кроками перебирають дванадцять різних стартів і ставлять найгірший
+      і найкращий за підсумковим WCSS, а плашка поруч показує обидві межі.
+
+      І тут на цих даних відбувається несподіване. При K = 2 і K = 3 межі
+      збігаються: 54,15 і 18,02 незалежно від старту. Тобто на двовимірних Iris
+      невдалої ініціалізації просто не існує — усі дванадцять стартів приходять
+      в одну точку. Посуньте K до чотирьох, і розрив з'явиться: від 12,28 до
+      17,32, тобто на чверть; при K = 5 — від 9,16 до 17,15. Правило звідси не
+      «ініціалізація завжди важлива», а точніше: що дрібніше ділимо дані, то
+      більше локальних мінімумів і то потрібніший n_init. На простій задачі
+      з трьома добре розділеними групами про старт можна не думати. Перемкніть на «види» — видно,
       що setosa відокремлюється ідеально, а versicolor і virginica частково змішані:
       кластери не зобов'язані збігатися з класами.
     </p>

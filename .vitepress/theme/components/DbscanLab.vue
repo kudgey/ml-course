@@ -12,16 +12,31 @@ const NAMES = Object.keys(d.sets)
 const set = ref(NAMES[0])
 const ei = ref(d.eps.indexOf(0.3) >= 0 ? d.eps.indexOf(0.3) : 4)
 const mi = ref(1)
-const mode = ref<'db' | 'km'>('db')
+const mode = ref<'db' | 'hdb' | 'km'>('db')
 const kmK = ref(2)
+const hi = ref(1)                       // індекс у d.mcs
 
 const cur = computed(() => (d.sets as any)[set.value])
 const eps = computed(() => d.eps[ei.value])
 const minpts = computed(() => d.minpts[mi.value])
-const res = computed(() => cur.value.db[`${eps.value}|${minpts.value}`])
+const mcs = computed(() => (d as any).mcs[hi.value])
+const res = computed(() => mode.value === 'hdb'
+  ? cur.value.hdb[String(mcs.value)]
+  : cur.value.db[`${eps.value}|${minpts.value}`])
+
+/** Найкращий ARI по всій сітці ε × minPts — те, чого без міток не дізнатися. */
+const bestDb = computed(() => Math.max(
+  ...Object.values(cur.value.db as Record<string, any>).map(r => r.ari)))
+const bestHdb = computed(() => Math.max(
+  ...Object.values(cur.value.hdb as Record<string, any>).map(r => r.ari)))
+/** Частка налаштувань DBSCAN, які дають хоч скільки-небудь пристойний ARI. */
+const okShare = computed(() => {
+  const all = Object.values(cur.value.db as Record<string, any>)
+  return all.filter(r => r.ari >= 0.8 * bestDb.value).length / all.length
+})
 
 const labels = computed(() =>
-  mode.value === 'db' ? res.value.lab : cur.value.km[String(kmK.value)])
+  mode.value === 'km' ? cur.value.km[String(kmK.value)].lab : res.value.lab)
 
 const W = 420, H = 300, PAD = 22
 const pts = computed(() => cur.value.X as number[][])
@@ -76,7 +91,22 @@ const fmt = (v: number) => v.toFixed(2).replace('.', ',')
       </label>
       <div class="lab__ctl">
         <span>Порівняти з іншим методом</span>
-        <button class="lab__btn" @click="mode = 'km'">показати K-means</button>
+        <span class="db__btns">
+          <button class="lab__btn" @click="mode = 'hdb'">HDBSCAN</button>
+          <button class="lab__btn" @click="mode = 'km'">K-means</button>
+        </span>
+      </div>
+    </div>
+
+    <div class="lab__controls" v-else-if="mode === 'hdb'">
+      <label class="lab__ctl">
+        <span>HDBSCAN, мінімальний розмір кластера = <b>{{ mcs }}</b></span>
+        <input type="range" min="0" :max="(d as any).mcs.length - 1" step="1"
+               v-model.number="hi" />
+      </label>
+      <div class="lab__ctl">
+        <span>Повернутися</span>
+        <button class="lab__btn" @click="mode = 'db'">показати DBSCAN</button>
       </div>
     </div>
 
@@ -91,17 +121,25 @@ const fmt = (v: number) => v.toFixed(2).replace('.', ',')
       </div>
     </div>
 
-    <div class="lab__stats" v-if="mode === 'db'">
+    <div class="lab__stats" v-if="mode !== 'km'">
       <div class="lab__stat"><b>{{ res.k }}</b><span>знайдено кластерів</span></div>
       <div class="lab__stat" :class="res.noise > pts.length * 0.3 ? 'is-warm' : ''">
         <b>{{ res.noise }}</b><span>точок у шумі ({{ noisePct }} %)</span>
       </div>
-      <div class="lab__stat"><b>{{ pts.length }}</b><span>точок у наборі</span></div>
+      <div class="lab__stat" :class="res.ari > 0.8 ? 'is-green' : res.ari < 0.4 ? 'is-warm' : ''">
+        <b>{{ fmt(res.ari) }}</b><span>ARI зі справжніми групами</span>
+      </div>
+      <div class="lab__stat">
+        <b>{{ fmt(mode === 'db' ? bestDb : bestHdb) }}</b>
+        <span>найкраще, що дає цей метод на цьому наборі</span>
+      </div>
     </div>
     <div class="lab__stats" v-else>
       <div class="lab__stat"><b>{{ kmK }}</b><span>кластерів задано вручну</span></div>
       <div class="lab__stat is-warm"><b>0</b><span>точок у шумі — K-means бере всіх</span></div>
-      <div class="lab__stat"><b>{{ pts.length }}</b><span>точок у наборі</span></div>
+      <div class="lab__stat" :class="cur.km[String(kmK)].ari > 0.8 ? 'is-green' : ''">
+        <b>{{ fmt(cur.km[String(kmK)].ari) }}</b><span>ARI зі справжніми групами</span>
+      </div>
     </div>
 
     <p class="lab__note">
@@ -110,9 +148,22 @@ const fmt = (v: number) => v.toFixed(2).replace('.', ',')
       що той ріже їх навпіл поперек. Але візьміть третій набір, де щільна група
       сусідить із розрідженою: жодне ε не годиться одразу для обох. Мале — і
       розріджена група цілком іде в шум; велике — і щільна злипається із сусідами.
-      Саме цю ваду знімають HDBSCAN та OPTICS, які перебирають цілий діапазон
+      Саме цю ваду знімає HDBSCAN — кнопка поруч, — який перебирає цілий діапазон
       радіусів замість одного. Параметр minPts діє м'якше: він задає, скільки
       сусідів робить точку ядром, і головно впливає на те, що вважати шумом.
+    </p>
+
+    <p class="lab__note">
+      Тепер про ARI, який з'явився в нижньому ряду. Він порівнює знайдені групи
+      зі справжніми, і саме тут ховається головна пастка кластеризації: у
+      реальній задачі цього числа у вас немає. Подивіться на дві останні
+      плашки. Найкраще, чого досягає DBSCAN на цьому наборі, зазвичай не гірше
+      за HDBSCAN, а часом і краще — але це «найкраще» знайдене перебором по
+      всій сітці ε × minPts, тобто з підглядуванням у відповідь. Посуньте ε на
+      один крок від найкращого значення й подивіться, як падає ARI: у DBSCAN
+      падіння різке, у HDBSCAN між сусідніми значеннями мінімального розміру —
+      плавне. Перевага HDBSCAN не в тому, що його пік вищий, а в тому, що біля
+      піку рівніше — і на нього легше потрапити, коли перевірити нічим.
     </p>
   </div>
 </template>
