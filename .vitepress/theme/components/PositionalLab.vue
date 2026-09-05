@@ -12,6 +12,73 @@ const D = ref(64)
 const T = ref(40)
 const probe = ref(10)
 
+/**
+ * Перевірка перестановочної еквіваріантності просто у браузері. Беремо шість
+ * токенів по вісім вимірів, рахуємо одноголову самоувагу, потім міняємо
+ * місцями два токени й порівнюємо переставлений вихід із виходом від
+ * переставленого входу. Без позиційного кодування вони збігаються; з ним —
+ * ні, і саме в цьому вся суть розділу.
+ */
+const withPE = ref(false)
+const SWAP: [number, number] = [2, 3]
+const NT = 6, ND = 8
+
+/** Відтворюваний генератор, щоб числа були однакові на всіх машинах. */
+function prng(seed: number) {
+  let v = seed
+  return () => { v = (v * 1103515245 + 12345) % 2147483648; return v / 2147483648 - 0.5 }
+}
+const rnd = prng(7)
+const mat = (r: number, c: number) =>
+  Array.from({ length: r }, () => Array.from({ length: c }, () => rnd()))
+const Wq = mat(ND, ND), Wk = mat(ND, ND), Wv = mat(ND, ND)
+const X0 = mat(NT, ND)
+
+const peRow = (pos: number) =>
+  Array.from({ length: ND }, (_, i) => {
+    const k = Math.floor(i / 2)
+    const w = pos / Math.pow(10000, (2 * k) / ND)
+    return i % 2 === 0 ? Math.sin(w) : Math.cos(w)
+  })
+
+const mul = (A: number[][], B: number[][]) =>
+  A.map(row => B[0].map((_, j) => row.reduce((s, v, k) => s + v * B[k][j], 0)))
+
+function selfAttention(X: number[][]) {
+  const Q = mul(X, Wq), K = mul(X, Wk), Vv = mul(X, Wv)
+  const scale = Math.sqrt(ND)
+  return Q.map(q => {
+    const sc = K.map(k => q.reduce((s, v, i) => s + v * k[i], 0) / scale)
+    const mx = Math.max(...sc)
+    const ex = sc.map(v => Math.exp(v - mx))
+    const z = ex.reduce((a, b) => a + b, 0)
+    return Vv[0].map((_, j) => ex.reduce((s, e, i) => s + (e / z) * Vv[i][j], 0))
+  })
+}
+
+/** Максимальна розбіжність між SA(RX) і R·SA(X) для перестановки R. */
+const permGap = computed(() => {
+  const [a, b] = SWAP
+  // кодування прив'язане до ПОЗИЦІЇ, а не до токена: переставляємо токени,
+  // а кодування щоразу додаємо за новим порядком — саме так працює модель
+  const withCode = (tokens: number[][]) =>
+    tokens.map((row, t) => withPE.value ? row.map((v, i) => v + peRow(t)[i]) : [...row])
+
+  const tokensSwapped = X0.map(r => [...r])
+  ;[tokensSwapped[a], tokensSwapped[b]] = [tokensSwapped[b], tokensSwapped[a]]
+
+  const outSwappedInput = selfAttention(withCode(tokensSwapped))
+  const outBase = selfAttention(withCode(X0))
+  const permutedOut = outBase.map(r => [...r])
+  ;[permutedOut[a], permutedOut[b]] = [permutedOut[b], permutedOut[a]]
+
+  let worst = 0
+  for (let i = 0; i < NT; i++)
+    for (let j = 0; j < ND; j++)
+      worst = Math.max(worst, Math.abs(outSwappedInput[i][j] - permutedOut[i][j]))
+  return worst
+})
+
 const pe = computed(() => {
   const rows: number[][] = []
   for (let pos = 0; pos < T.value; pos++) {
@@ -108,6 +175,24 @@ const fmt = (v: number) => v.toFixed(2).replace('.', ',')
       <div class="lab__stat"><b>{{ D }}</b><span>чисел на позицію</span></div>
     </div>
 
+    <div class="lab__pills">
+      <button class="lab__pill" :class="{ 'is-on': !withPE }" @click="withPE = false">
+        сама увага
+      </button>
+      <button class="lab__pill" :class="{ 'is-on': withPE }" @click="withPE = true">
+        увага + позиційне кодування
+      </button>
+    </div>
+
+    <div class="lab__stats">
+      <div class="lab__stat" :class="permGap < 1e-12 ? 'is-warm' : 'is-green'">
+        <b>{{ permGap < 1e-12 ? '≈ 0' : permGap.toFixed(3).replace('.', ',') }}</b>
+        <span>розбіжність після перестановки двох токенів</span>
+      </div>
+      <div class="lab__stat"><b>6 × 8</b><span>токенів і вимірів у перевірці</span></div>
+      <div class="lab__stat"><b>{{ withPE ? 'так' : 'ні' }}</b><span>кодування додано до вкладень</span></div>
+    </div>
+
     <p class="lab__note">
       Пік схожості стоїть рівно на обраній позиції й спадає з відстанню — саме тому
       модель може вивести «наскільки далеко» один токен від іншого, хоча сама увага
@@ -116,6 +201,23 @@ const fmt = (v: number) => v.toFixed(2).replace('.', ',')
       Зменште D до восьми — частот стає замало, і далекі позиції починають
       виглядати схожими; це і є причина, чому розмірність кодування беруть такою
       самою, як розмірність вкладення.
+    </p>
+
+    <p class="lab__note">
+      Друга частина вставки перевіряє те, заради чого кодування й вигадали.
+      Кнопка «сама увага» рахує самоувагу на шести токенах, потім міняє місцями
+      третій і четвертий і порівнює результат із переставленим виходом. Різниця
+      дорівнює нулю з точністю машинної арифметики: увага справді не бачить
+      порядку, і це властивість архітектури, а не наслідок навчання. У лекції
+      той самий дослід на PyTorch дає 1,2·10⁻⁷ — розбіжність більша лише тому,
+      що там float32, а тут подвійна точність.
+
+      Тепер натисніть «увага + позиційне кодування». Розбіжність перестає бути
+      нулем — на цих числах 0,076. Причина в тому, що кодування прив'язане до
+      позиції, а не до токена: переставивши слова, ми лишили кодування на
+      місці, і входи справді змінилися. Саме це й потрібно — так модель
+      дізнається, що «вона любить котів більше за собак» не те саме, що «вона
+      любить собак більше за котів».
     </p>
   </div>
 </template>
