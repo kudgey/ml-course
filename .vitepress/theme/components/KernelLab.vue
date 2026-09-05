@@ -44,6 +44,32 @@ const cell = computed(() => ({
 const fmt = (v: number) =>
   v < 1e-3 ? v.toExponential(1).replace('.', ',') : v.toFixed(3).replace('.', ',')
 const COL = ['#2F6DB5', '#C2571A']
+
+/**
+ * Карта якості по всій сітці C × gamma. Значення вже пораховані для кожної
+ * пари, тож тут лише розфарбовуємо їх і даємо клікнути. Головне, що має бути
+ * видно: світлі клітинки лягають діагоналлю, а не збираються в одну точку.
+ */
+const MW = 250, MH = 190, ML = 42, MT = 16, MB = 30
+const cw = (MW - ML - 8) / d.gammas.length
+const chh = (MH - MT - MB) / d.Cs.length
+const accOf = (ci_: number, gi_: number) =>
+  (d.meta as Record<string, any>)[`${d.Cs[ci_]}|${d.gammas[gi_]}`].te as number
+const accs = computed(() => d.Cs.flatMap((_, r) => d.gammas.map((__, c) => accOf(r, c))))
+const accLo = computed(() => Math.min(...accs.value))
+const accHi = computed(() => Math.max(...accs.value))
+const shade = (v: number) => {
+  const t = (v - accLo.value) / (accHi.value - accLo.value || 1)
+  return `rgba(30,142,106,${(0.08 + 0.72 * t).toFixed(3)})`
+}
+const bestCell = computed(() => {
+  let b = { r: 0, c: 0, v: -1 }
+  d.Cs.forEach((_, r) => d.gammas.forEach((__, c) => {
+    const v = accOf(r, c)
+    if (v > b.v) b = { r, c, v }
+  }))
+  return b
+})
 </script>
 
 <template>
@@ -53,8 +79,8 @@ const COL = ['#2F6DB5', '#C2571A']
         <div class="lab__title">Що робить gamma — і що з цього виходить</div>
         <div class="lab__sub">
           Ліворуч саме ядро: як швидко спадає схожість двох точок із відстанню.
+          Посередині — карта якості по всій сітці C × gamma, клітинки клікабельні.
           Праворуч — межа рішень на тих самих двох півмісяцях, що в коді лекції.
-          Один параметр, два наслідки.
         </div>
       </div>
     </div>
@@ -72,6 +98,32 @@ const COL = ['#2F6DB5', '#C2571A']
           <text :x="KP - 5" :y="ky(0) + 4" class="kr__lbl" text-anchor="end">0</text>
           <text :x="kx(1)" :y="KH - KP + 14" class="kr__lbl" text-anchor="middle">1,0</text>
           <text :x="KW / 2" :y="KH - 4" class="kr__lbl" text-anchor="middle">відстань між точками</text>
+        </svg>
+      </figure>
+
+      <figure class="kr__panel">
+        <figcaption>карта якості на сітці C × gamma</figcaption>
+        <svg :viewBox="`0 0 ${MW} ${MH}`" role="img"
+             aria-label="Карта точності для пар C і gamma">
+          <g v-for="(cv, r) in d.Cs" :key="'r' + r">
+            <rect v-for="(gv, c) in d.gammas" :key="'c' + c"
+                  :x="ML + c * cw" :y="MT + (d.Cs.length - 1 - r) * chh"
+                  :width="cw - 1.5" :height="chh - 1.5" :fill="shade(accOf(r, c))"
+                  class="kr__cell" @click="ci = r; gi = c" />
+            <text :x="ML - 6" :y="MT + (d.Cs.length - 1 - r) * chh + chh / 2 + 3"
+                  class="kr__lbl" text-anchor="end">{{ cv }}</text>
+          </g>
+          <rect :x="ML + gi * cw - 1" :y="MT + (d.Cs.length - 1 - ci) * chh - 1"
+                :width="cw + 0.5" :height="chh + 0.5" class="kr__now" />
+          <circle :cx="ML + bestCell.c * cw + cw / 2 - 0.7"
+                  :cy="MT + (d.Cs.length - 1 - bestCell.r) * chh + chh / 2 - 0.7"
+                  r="3" class="kr__bestdot" />
+          <text v-for="(gv, c) in d.gammas" :key="'g' + c"
+                :x="ML + c * cw + cw / 2 - 0.7" :y="MH - MB + 14"
+                class="kr__lbl" text-anchor="middle">{{ gv }}</text>
+          <text :x="ML + (MW - ML) / 2" :y="MH - 4" class="kr__lbl" text-anchor="middle">gamma</text>
+          <text :x="10" :y="MT + (MH - MT - MB) / 2" class="kr__lbl" text-anchor="middle"
+                :transform="`rotate(-90 10 ${MT + (MH - MT - MB) / 2})`">C</text>
         </svg>
       </figure>
 
@@ -120,6 +172,19 @@ const COL = ['#2F6DB5', '#C2571A']
       векторів разом із нею. Саме тому ці два параметри підбирають спільно, сіткою,
       а не по черзі.
     </p>
+
+    <p class="lab__note">
+      Карта посередині показує це відразу для всіх двадцяти чотирьох пар. Світлі
+      клітинки не збираються в одну точку, а лягають діагоналлю: C = 100 з
+      gamma = 0,1 працює приблизно так само, як C = 0,1 з gamma = 10, і між ними
+      тягнеться ціла смуга однаково пристойних налаштувань. Зелений кружок —
+      найкраща клітинка, 0,967; але поруч із нею стоять кілька по 0,956, і
+      різниця між ними менша за розкид між фолдами. Практичний висновок той
+      самий, що в тексті розділу: сітку беруть логарифмічну, а всередині світлої
+      смуги за третій знак не воюють. Клацніть по кутах карти: лівий верхній
+      (мале gamma, велике C) дає майже пряму межу, правий нижній
+      (велике gamma, мале C) — острівці навколо окремих точок.
+    </p>
   </div>
 </template>
 
@@ -150,4 +215,8 @@ const COL = ['#2F6DB5', '#C2571A']
 .kr__curve { fill: none; stroke: var(--uk-accent); stroke-width: 2; }
 .kr__dot { fill: var(--uk-warm); }
 .kr__lbl { fill: var(--vp-c-text-3); font-size: 10px; }
+.kr__cell { cursor: pointer; }
+.kr__cell:hover { stroke: var(--uk-accent); stroke-width: 1.2; }
+.kr__now { fill: none; stroke: var(--uk-warm); stroke-width: 2; }
+.kr__bestdot { fill: var(--uk-green); stroke: #fff; stroke-width: 1; }
 </style>
