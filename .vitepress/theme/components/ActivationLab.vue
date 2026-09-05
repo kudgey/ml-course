@@ -10,6 +10,40 @@ import { ref, computed } from 'vue'
 const z = ref(2.5)
 const depth = ref(10)
 
+/**
+ * Друга частина вставки: масштаб початкових ваг. Для шару з n входами і ваг
+ * ~N(0, σ²) дисперсія передактивацій множиться на σ²n, а ReLU обнуляє половину,
+ * тож стандартне відхилення на шар множиться на σ·√(n/2). Ініціалізація He —
+ * це рівно та σ, за якої множник дорівнює одиниці. Формула та сама, що в
+ * розділі про ініціалізацію, тому числа збігаються з виміряними: при σ = 0,01
+ * і двадцяти шарах по 256 нейронів сигнал падає приблизно до 10⁻¹⁹.
+ */
+const sigma = ref(0.01)
+const WIDTH = 256
+const SIG_STEPS = [0.005, 0.01, 0.02, 0.05, 0.0884, 0.12, 0.2]
+const perLayer = computed(() => sigma.value * Math.sqrt(WIDTH / 2))
+const heSigma = Math.sqrt(2 / WIDTH)
+const chain = computed(() => {
+  const out: number[] = [1]
+  for (let i = 1; i <= 20; i++) out.push(out[i - 1] * perLayer.value)
+  return out
+})
+const SW = 250, SH = 190, SP = 34
+const lo = -22, hiE = 8
+const lgv = (v: number) => Math.max(lo, Math.min(hiE, Math.log10(Math.max(v, 1e-30))))
+const sxx = (i: number) => SP + (i / 20) * (SW - 2 * SP)
+const syy = (v: number) => SH - SP - ((lgv(v) - lo) / (hiE - lo)) * (SH - 2 * SP)
+const chainPath = computed(() =>
+  chain.value.map((v, i) => `${sxx(i).toFixed(1)},${syy(v).toFixed(1)}`).join(' '))
+/** Той самий формат степеня, що в fmt нижче, але з трьома знаками для чисел
+    звичайного порядку: множник на шар цікавий саме до третього знака. */
+const fmtExp = (v: number) => {
+  if (v === 0) return '0'
+  if (v >= 0.01 && v < 1000) return v.toFixed(3).replace('.', ',')
+  const parts = v.toExponential(1).split('e')
+  return `${parts[0].replace('.', ',')} · 10${sup(String(Number(parts[1])))}`
+}
+
 const FN = {
   sigmoid: {
     name: 'сигмоїда',
@@ -168,6 +202,51 @@ const fmt = (v: number) => {
       </tbody>
     </table>
 
+    <div class="ac__init">
+      <figure class="ac__panel">
+        <figcaption>масштаб сигналу по шарах, логарифмічна вісь</figcaption>
+        <svg :viewBox="`0 0 ${SW} ${SH}`" role="img"
+             aria-label="Згасання або вибух сигналу з глибиною">
+          <line :x1="SP" :y1="syy(1)" :x2="SW - SP" :y2="syy(1)" class="ac__unit" />
+          <polyline :points="chainPath" class="ac__chain" />
+          <text :x="SP - 4" :y="syy(1) + 3" class="ac__lbl" text-anchor="end">1</text>
+          <text :x="SP - 4" :y="syy(1e-20) + 3" class="ac__lbl" text-anchor="end">10⁻²⁰</text>
+          <text :x="SP - 4" :y="syy(1e8) + 8" class="ac__lbl" text-anchor="end">10⁸</text>
+          <text :x="SW / 2" :y="SH - 6" class="ac__lbl" text-anchor="middle">номер шару</text>
+        </svg>
+      </figure>
+
+      <div class="ac__ctl">
+        <label class="lab__ctl">
+          <span>Масштаб початкових ваг σ = <b>{{ fmtExp(sigma) }}</b></span>
+          <input type="range" min="0" :max="SIG_STEPS.length - 1" step="1"
+                 :value="SIG_STEPS.indexOf(sigma) >= 0 ? SIG_STEPS.indexOf(sigma) : 1"
+                 @input="sigma = SIG_STEPS[Number(($event.target as HTMLInputElement).value)]" />
+        </label>
+        <div class="lab__stats">
+          <div class="lab__stat"><b>{{ fmtExp(perLayer) }}</b><span>множник на один шар</span></div>
+          <div class="lab__stat"
+               :class="chain[20] < 1e-6 ? 'is-warm' : chain[20] > 100 ? 'is-warm' : 'is-green'">
+            <b>{{ fmtExp(chain[20]) }}</b><span>після двадцяти шарів по {{ WIDTH }}</span>
+          </div>
+          <div class="lab__stat"><b>{{ fmtExp(heSigma) }}</b><span>σ за He: множник рівно 1</span></div>
+        </div>
+      </div>
+    </div>
+
+    <p class="lab__note">
+      Друга половина вставки — про те, з чого мережа починає. Для шару з
+      {{ WIDTH }} входами стандартне відхилення сигналу множиться на σ·√(n/2)
+      за шар, тож усе вирішує геометрична прогресія. Поставте σ = 0,01: множник
+      0,113, і через двадцять шарів від сигналу лишається 10⁻¹⁹ — той самий
+      порядок, що дає прямий вимір на такій мережі, 3,5·10⁻²⁰ (оцінка
+      дисперсійна, тож збігається за порядком, а не до цифри). Поставте σ = 0,2 — і сигнал
+      навпаки виростає в мільйони разів. Між цими двома катастрофами є рівно
+      одне значення, за якого множник дорівнює одиниці: σ = √(2/n) = 0,088, та
+      сама ініціалізація He з розділу вище. Тепер видно, що вона не «вдалий
+      емпіричний вибір», а єдиний розв'язок рівняння σ·√(n/2) = 1.
+    </p>
+
     <p class="lab__note">
       Поставте z = 0 — це найкраще, що може дати сигмоїда: похідна рівно 0,25, і вже
       через десять шарів множник падає до 10⁻⁶. Це і є <b>зникаючий градієнт</b>:
@@ -180,6 +259,26 @@ const fmt = (v: number) => {
 </template>
 
 <style scoped>
+.ac__init {
+  display: grid;
+  grid-template-columns: minmax(0, 260px) minmax(0, 1fr);
+  gap: 1rem;
+  align-items: start;
+  margin: 0.6rem 0 0.4rem;
+}
+@media (max-width: 700px) { .ac__init { grid-template-columns: 1fr; } }
+.ac__init figure { margin: 0; }
+.ac__init figcaption {
+  font-size: 0.75rem; color: var(--vp-c-text-3);
+  margin-bottom: 0.3rem; text-align: center;
+}
+.ac__init svg {
+  width: 100%; height: auto; display: block;
+  border: 1px solid var(--uk-line); border-radius: 8px; background: var(--vp-c-bg);
+}
+.ac__unit { stroke: var(--uk-line); stroke-width: 1; stroke-dasharray: 3 3; }
+.ac__chain { fill: none; stroke: var(--uk-accent); stroke-width: 2.4; }
+.ac__lbl { fill: var(--vp-c-text-3); font-size: 9px; }
 .ac__grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(255px, 1fr));
