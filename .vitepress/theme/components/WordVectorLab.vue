@@ -21,7 +21,8 @@ const PRESETS = [
   { a: 'france', b: 'paris', c: 'italy', what: 'столиця країни' },
   { a: 'good', b: 'better', c: 'bad', what: 'ступінь порівняння' },
   { a: 'walk', b: 'walked', c: 'go', what: 'минулий час' },
-  { a: 'cat', b: 'dog', c: 'car', what: 'аналогії немає' }
+  { a: 'cat', b: 'dog', c: 'car', what: 'аналогії немає' },
+  { a: 'walking', b: 'walked', c: 'swimming', what: 'межа методу' }
 ]
 
 function cos(u: number[], v: number[]) {
