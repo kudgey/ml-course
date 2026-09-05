@@ -10,6 +10,7 @@ import CourseHome from './components/CourseHome.vue'
 import Materials from './components/Materials.vue'
 
 import GradientDescentLab from './components/GradientDescentLab.vue'
+import OutlierLab from './components/OutlierLab.vue'
 import ThresholdLab from './components/ThresholdLab.vue'
 import KMeansLab from './components/KMeansLab.vue'
 import ActivationLab from './components/ActivationLab.vue'
@@ -39,6 +40,7 @@ export default {
     app.component('CourseHome', CourseHome)
     app.component('Materials', Materials)
     app.component('GradientDescentLab', GradientDescentLab)
+    app.component('OutlierLab', OutlierLab)
     app.component('ThresholdLab', ThresholdLab)
     app.component('KMeansLab', KMeansLab)
     app.component('ActivationLab', ActivationLab)
