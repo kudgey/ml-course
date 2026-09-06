@@ -22,6 +22,7 @@ import ConvolutionLab from './components/ConvolutionLab.vue'
 import DbscanLab from './components/DbscanLab.vue'
 import BiasVarianceLab from './components/BiasVarianceLab.vue'
 import SplitLab from './components/SplitLab.vue'
+import BackpropLab from './components/BackpropLab.vue'
 import WordVectorLab from './components/WordVectorLab.vue'
 import KernelLab from './components/KernelLab.vue'
 import PositionalLab from './components/PositionalLab.vue'
@@ -53,6 +54,7 @@ export default {
     app.component('DbscanLab', DbscanLab)
     app.component('BiasVarianceLab', BiasVarianceLab)
     app.component('SplitLab', SplitLab)
+    app.component('BackpropLab', BackpropLab)
     app.component('WordVectorLab', WordVectorLab)
     app.component('KernelLab', KernelLab)
     app.component('PositionalLab', PositionalLab)
