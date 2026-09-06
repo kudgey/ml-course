@@ -6,11 +6,25 @@
  */
 import { ref, computed } from 'vue'
 import data from '../../data/lec11_digits.json'
+import rev from '../../data/lec14_reverse.json'
 
 const digit = ref('3')
 const t = ref(0)
 const alpha = ref(0.95)
 const seed = ref(7)
+
+/**
+ * Друга половина вставки — зворотний хід. Мережу в браузері не запустиш, тож
+ * кадри пораховано наперед тією самою моделлю, що будує рисунки лекції
+ * (tools/gen_lec14_reverse.py): вісім зразків на кожному з тринадцяти
+ * моментів часу від чистого шуму до цифри.
+ */
+const mode = ref<'forward' | 'reverse'>('forward')
+const STEPS_REV = rev.steps as number[]
+const ri = ref(0)
+const revT = computed(() => STEPS_REV[ri.value])
+const revFrames = computed(() =>
+  (rev.frames as Record<string, number[][]>)[String(revT.value)])
 
 const TMAX = 120
 
@@ -53,6 +67,10 @@ const shade = (v: number) => {
 
 const fmt = (v: number, d = 3) => v.toFixed(d).replace('.', ',')
 const STEPS = [0, 10, 30, 60, 120]
+const shade01 = (v: number) => {
+  const g = Math.round(255 - Math.max(0, Math.min(1, v)) * 255)
+  return `rgb(${g},${g},${g})`
+}
 </script>
 
 <template>
@@ -69,12 +87,46 @@ const STEPS = [0, 10, 30, 60, 120]
     </div>
 
     <div class="lab__pills">
+      <button class="lab__pill" :class="{ 'is-on': mode === 'forward' }"
+              @click="mode = 'forward'">прямий процес</button>
+      <button class="lab__pill" :class="{ 'is-on': mode === 'reverse' }"
+              @click="mode = 'reverse'">зворотний хід</button>
+    </div>
+
+    <div v-if="mode === 'reverse'" class="df__rev">
+      <label class="lab__ctl">
+        <span>Крок зворотного процесу: <b>t = {{ revT }}</b>
+          ({{ ri + 1 }} із {{ STEPS_REV.length }})</span>
+        <input type="range" min="0" :max="STEPS_REV.length - 1" step="1"
+               v-model.number="ri" />
+      </label>
+      <div class="df__row">
+        <svg v-for="(img, k) in revFrames" :key="k" viewBox="0 0 28 28" class="df__thumb">
+          <rect v-for="(v, q) in img" :key="q" :x="q % 28" :y="Math.floor(q / 28)"
+                width="1" height="1" :fill="shade01(v)" />
+        </svg>
+      </div>
+      <p class="lab__note">
+        Ті самі вісім зразків на кожному кроці: ліворуч на повзунку — чистий
+        гаусів шум при t = 199, праворуч — готові цифри при t = 0. Кадри
+        пораховано тією самою мережею, що будує рисунки лекції, тож це не
+        анімація «як могло б бути», а справжній прогін мережі, яку ви бачили
+        на рисунках вище. Тягніть повзунок і дивіться, коли саме з'являється
+        структура: усі вісім зразків проходять шлях одночасно, тож видно, що
+        це не поступове «проявлення» однієї картинки, а спільний рух від
+        одного розподілу до іншого. Зверніть увагу й на якість кінцевих
+        цифр — вони помітно гірші за справжні, і саме це показує FID 155,0
+        з розділу вище.
+      </p>
+    </div>
+
+    <div v-if="mode === 'forward'" class="lab__pills">
       <button v-for="s in STEPS" :key="s" class="lab__pill"
               :class="{ 'is-on': t === s }" @click="t = s">t = {{ s }}</button>
       <button class="lab__pill" @click="seed = (seed % 20) + 1">інший шум</button>
     </div>
 
-    <div class="df__grid">
+    <div v-if="mode === 'forward'" class="df__grid">
       <figure class="df__panel">
         <figcaption>сигнал: α<sup>t</sup> · x₀</figcaption>
         <svg viewBox="0 0 28 28" class="df__img">
@@ -132,7 +184,7 @@ const STEPS = [0, 10, 30, 60, 120]
       </div>
     </div>
 
-    <p class="lab__note">
+    <p v-if="mode === 'forward'" class="lab__note">
       Сигнал згасає як α<sup>t</sup>, шум накопичується — і сума завжди лишається
       з тією самою дисперсією, бо коефіцієнти підібрано так навмисно. Візьміть
       α = 0,9: цифра зникає за пару десятків кроків. Візьміть 0,995 — ланцюг
@@ -145,6 +197,12 @@ const STEPS = [0, 10, 30, 60, 120]
 </template>
 
 <style scoped>
+.df__rev { margin: 0.4rem 0 0.6rem; }
+.df__row { display: flex; gap: 0.4rem; flex-wrap: wrap; margin: 0.5rem 0; }
+.df__thumb {
+  width: 64px; height: 64px; image-rendering: pixelated;
+  border: 1px solid var(--uk-line); border-radius: 4px; background: var(--vp-c-bg);
+}
 .df__grid {
   display: grid;
   grid-template-columns: 1fr auto 1fr auto 1fr;
