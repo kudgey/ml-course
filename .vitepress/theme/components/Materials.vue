@@ -51,6 +51,7 @@ const ICON: Record<string, string> = {
 .mt__list li + li { margin-top: 0.55rem; }
 .mt__list a {
   display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
   gap: 0.5rem;
   text-decoration: none;
@@ -63,7 +64,7 @@ const ICON: Record<string, string> = {
   border-bottom-color: currentColor;
 }
 .mt__icon { flex: none; font-size: 0.88rem; opacity: 0.75; }
-.mt__title { border-bottom: 1px solid transparent; }
+.mt__title { border-bottom: 1px solid transparent; min-width: 0; overflow-wrap: anywhere; }
 .mt__kind {
   flex: none;
   font-size: 0.68rem;

@@ -162,9 +162,11 @@ function reset() {
 <style scoped>
 .at__grid {
   display: grid;
-  /* Рівно три колонки: auto-fit на ширині колонки сайту давав 2 + 1,
-     і третя таблиця лишалася сама в рядку. */
-  grid-template-columns: 1fr 1fr 1.2fr;
+  /* Дві колонки: оцінки й ваги поруч, вихід — на всю ширину під ними.
+     Три таблиці в рядок (1fr 1fr 1.2fr) у колонку контенту VitePress не
+     вміщалися: мінімальна ширина кожної ~225 px, а всередині віджета ~640,
+     і сітка розпирала рамку на 54 px навіть на десктопі. */
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1rem;
   margin: 0.5rem 0 0.8rem;
 }
@@ -187,5 +189,6 @@ function reset() {
 }
 .at__corner { border: none !important; }
 .at__ent { color: var(--vp-c-text-3); }
+.at__grid .at__panel:last-child { grid-column: 1 / -1; }
 @media (max-width: 640px) { .at__grid { grid-template-columns: 1fr; } }
 </style>

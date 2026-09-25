@@ -205,7 +205,7 @@ const fmt = (v: number) =>
 <style scoped>
 .bv__grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(270px, 100%), 1fr));
   gap: 1rem;
   margin: 0.4rem 0 0.8rem;
 }

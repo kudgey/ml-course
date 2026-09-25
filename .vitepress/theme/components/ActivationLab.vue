@@ -281,7 +281,7 @@ const fmt = (v: number) => {
 .ac__lbl { fill: var(--vp-c-text-3); font-size: 9px; }
 .ac__grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(255px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(255px, 100%), 1fr));
   gap: 1rem;
   margin: 0.4rem 0 0.6rem;
 }
