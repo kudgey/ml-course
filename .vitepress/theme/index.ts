@@ -30,6 +30,9 @@ import KernelLab from './components/KernelLab.vue'
 import PositionalLab from './components/PositionalLab.vue'
 import DiffusionLab from './components/DiffusionLab.vue'
 import LikelihoodLab from './components/LikelihoodLab.vue'
+import LossLab from './components/LossLab.vue'
+import SigmoidLab from './components/SigmoidLab.vue'
+import DescentLab from './components/DescentLab.vue'
 
 export default {
   extends: DefaultTheme,
@@ -64,5 +67,8 @@ export default {
     app.component('PositionalLab', PositionalLab)
     app.component('DiffusionLab', DiffusionLab)
     app.component('LikelihoodLab', LikelihoodLab)
+    app.component('LossLab', LossLab)
+    app.component('SigmoidLab', SigmoidLab)
+    app.component('DescentLab', DescentLab)
   },
 } satisfies Theme
