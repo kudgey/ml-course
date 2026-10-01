@@ -97,7 +97,7 @@ const YT = [0, 1, 2, 3, 4]
 
     <table class="ll__table">
       <tbody>
-        <tr><th>втрата</th><th>формула</th><th>значення при m = {{ fmtM(m) }}</th></tr>
+        <tr><th>втрата</th><th>формула</th><th>значення втрати при m = {{ fmtM(m) }}</th></tr>
         <tr v-for="r in rows" :key="r.key" :data-loss="r.key">
           <td><i :style="{ background: r.color }" />{{ r.name }}</td>
           <td class="ll__f">{{ r.formula }}</td>
