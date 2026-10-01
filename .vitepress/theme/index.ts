@@ -33,6 +33,8 @@ import LikelihoodLab from './components/LikelihoodLab.vue'
 import LossLab from './components/LossLab.vue'
 import SigmoidLab from './components/SigmoidLab.vue'
 import DescentLab from './components/DescentLab.vue'
+import CalibrationLab from './components/CalibrationLab.vue'
+import SoftmaxLab from './components/SoftmaxLab.vue'
 
 export default {
   extends: DefaultTheme,
@@ -70,5 +72,7 @@ export default {
     app.component('LossLab', LossLab)
     app.component('SigmoidLab', SigmoidLab)
     app.component('DescentLab', DescentLab)
+    app.component('CalibrationLab', CalibrationLab)
+    app.component('SoftmaxLab', SoftmaxLab)
   },
 } satisfies Theme

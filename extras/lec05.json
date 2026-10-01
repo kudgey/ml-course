@@ -45,12 +45,6 @@
   "Крива точність–повнота чесніша при дисбалансі": {
     "materials": [
       {
-        "title": "Saito T., Rehmsmeier M. The Precision-Recall Plot Is More Informative than the ROC Plot",
-        "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0118432",
-        "kind": "стаття",
-        "note": "Стаття в PLOS ONE, де показано на симуляціях, коли саме ROC вводить в оману."
-      },
-      {
         "title": "scikit-learn · Precision-Recall",
         "url": "https://scikit-learn.org/stable/auto_examples/model_selection/plot_precision_recall.html",
         "kind": "документація",
@@ -66,7 +60,8 @@
         "kind": "документація",
         "note": "Які моделі підтримують мультиклас напряму, а які загортаються в one-vs-rest."
       }
-    ]
+    ],
+    "widget": "SoftmaxLab"
   },
   "Обмеження логістичної регресії": {
     "materials": [
@@ -86,5 +81,18 @@
   },
   "Функція втрат опукла, тому градієнтний спуск працює": {
     "widget": "DescentLab"
+  },
+  "Зважування класів псує ймовірності, калібрування їх лагодить": {
+    "widget": "CalibrationLab"
+  },
+  "На рідкісному класі ROC-крива оманлива": {
+    "materials": [
+      {
+        "title": "Saito T., Rehmsmeier M. The Precision-Recall Plot Is More Informative than the ROC Plot",
+        "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0118432",
+        "kind": "стаття",
+        "note": "Стаття в PLOS ONE, де показано на симуляціях, коли саме ROC вводить в оману."
+      }
+    ]
   }
 }

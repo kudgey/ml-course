@@ -1,9 +1,10 @@
 <script setup lang="ts">
 /**
- * Поріг класифікації на справжніх передбаченнях моделі з розділу:
+ * Поріг класифікації на справжніх передбаченнях моделі з коду scikit-learn:
  * логістична регресія на Breast Cancer Wisconsin, відкладені 171 спостереження.
- * Числа розділу відтворюються точно: поріг 0,5 → 4 пропуски і 4 хибні тривоги;
- * поріг 0,1 → 1 пропуск і 14 хибних тривог. ROC-AUC = 0,992.
+ * Дані пише tools/gen_lec05_widgets.py і звіряє з текстом: поріг 0,5 → 4 пропуски
+ * і 4 хибні тривоги; 0,1 → 1 і 14; 0,9 → 8 і 0. ROC-AUC = 0,992, AP = 0,989.
+ * Матриця, точка на ROC-кривій і точка на кривій точність–повнота рухаються разом.
  */
 import { ref, computed } from 'vue'
 import data from '../../data/lec05_proba.json'
@@ -50,7 +51,33 @@ const here = computed(() => {
   return { x: cm.value.fp / (Y.length - pos), y: rec.value }
 })
 
-const pct = (v: number) => (v * 100).toFixed(1).replace('.', ',') + ' %'
+/** Крива точність–повнота: те саме сортування, інші осі; AP = Σ (Rᵢ − Rᵢ₋₁)·Pᵢ, як у scikit-learn. */
+const pr = computed(() => {
+  const pos = Y.reduce((a, b) => a + b, 0)
+  const idx = P.map((p, i) => i).sort((a, b) => P[b] - P[a])
+  const pts: { x: number; y: number }[] = []
+  let tp = 0, fp = 0, ap = 0, prevR = 0
+  for (let k = 0; k < idx.length; k++) {
+    Y[idx[k]] === 1 ? tp++ : fp++
+    // поріг бере групу однакових імовірностей цілком
+    if (k + 1 < idx.length && P[idx[k + 1]] === P[idx[k]]) continue
+    const r = tp / pos, p = tp / (tp + fp)
+    ap += (r - prevR) * p
+    prevR = r
+    pts.push({ x: r, y: p })
+  }
+  return { pts, ap, base: pos / Y.length }
+})
+const prPath = computed(() => {
+  const pts = pr.value.pts
+  const out = [`${rx(0).toFixed(1)},${ry(pts[0].y).toFixed(1)}`]
+  let last = pts[0]
+  for (const q of pts) {   // на відрізку повноти (Rᵢ₋₁; Rᵢ] точність Pᵢ — саме ця площа і є AP
+    out.push(`${rx(last.x).toFixed(1)},${ry(q.y).toFixed(1)}`, `${rx(q.x).toFixed(1)},${ry(q.y).toFixed(1)}`)
+    last = q
+  }
+  return out.join(' ')
+})
 
 /**
  * Ціна помилки. Поріг, оптимальний за Баєсом, дорівнює C_FP / (C_FP + C_FN) —
@@ -85,10 +112,11 @@ const best = computed(() => {
 })
 
 const fmt3 = (v: number) => v.toFixed(3).replace('.', ',')
+const fmt2 = (v: number) => v.toFixed(2).replace('.', ',')
 
 const PRESETS = [
   { t: 0.1, label: 'скринінг: 0,1' },
-  { t: 0.434, label: 'поріг за F1 (перехресна перевірка): 0,434' },
+  { t: data.f1_threshold, label: `поріг за F1 (перехресна перевірка): ${fmt2(data.f1_threshold)}` },
   { t: 0.5, label: 'за звичкою: 0,5' },
   { t: 0.9, label: 'обережний: 0,9' }
 ]
@@ -98,11 +126,11 @@ const PRESETS = [
   <div class="lab">
     <div class="lab__head">
       <div>
-        <div class="lab__title">Поріг вирішує, ким стане пацієнтка</div>
+        <div class="lab__title">Поріг вирішує, яким буде діагноз</div>
         <div class="lab__sub">
-          Справжні передбачення моделі з розділу вище: логістична регресія на Breast Cancer
-          Wisconsin, відкладені 171 спостереження, ROC-AUC = {{ String(data.auc).replace('.', ',') }}.
-          Модель не змінюється — змінюється лише поріг.
+          Справжні передбачення моделі з коду scikit-learn: логістична регресія на Breast Cancer
+          Wisconsin, відкладені 171 спостереження. Модель не змінюється — змінюється лише поріг,
+          і разом із ним матриця похибок, точка на ROC-кривій і точка на кривій точність–повнота.
         </div>
       </div>
     </div>
@@ -135,12 +163,12 @@ const PRESETS = [
         поріг за Баєсом: {{ fmt3(bayesT) }}
       </button>
       <button class="lab__pill" @click="t = best.t">
-        емпіричний оптимум: {{ fmt3(best.t) }}
+        підгонка під ці 171 (так не можна): {{ fmt3(best.t) }}
       </button>
     </div>
 
     <div class="tl__grid">
-      <div class="tl__cm">
+      <div class="tl__cm" data-check="cm" :data-cm="`${cm.tn} ${cm.fp} ${cm.fn} ${cm.tp}`">
         <div class="tl__cmhead">Матриця похибок</div>
         <table>
           <tbody>
@@ -163,40 +191,59 @@ const PRESETS = [
         </table>
       </div>
 
+    </div>
+
+    <div class="tl__curves">
       <div class="tl__roc">
-        <div class="tl__cmhead">ROC-крива й поточна точка</div>
+        <div class="tl__cmhead">ROC-крива: AUC = <b data-check="auc">{{ String(data.auc).replace('.', ',') }}</b></div>
         <svg :viewBox="`0 0 ${W} ${H}`" role="img" aria-label="ROC-крива">
           <line :x1="rx(0)" :y1="ry(0)" :x2="rx(1)" :y2="ry(1)" class="tl__diag" />
           <polyline :points="rocPath" class="tl__curve" />
           <circle :cx="rx(here.x)" :cy="ry(here.y)" r="5" class="tl__pt" />
           <line :x1="PAD" :y1="H - PAD" :x2="W - PAD" :y2="H - PAD" class="tl__axis" />
           <line :x1="PAD" :y1="PAD" :x2="PAD" :y2="H - PAD" class="tl__axis" />
-          <text :x="W / 2" :y="H - 6" class="tl__lbl" text-anchor="middle">частка хибних тривог</text>
+          <text :x="W / 2" :y="H - 6" class="tl__lbl" text-anchor="middle">частка хибних тривог (FPR)</text>
           <text :x="10" :y="H / 2" class="tl__lbl" text-anchor="middle"
-                :transform="`rotate(-90 10 ${H / 2})`">повнота</text>
+                :transform="`rotate(-90 10 ${H / 2})`">повнота (TPR)</text>
+        </svg>
+      </div>
+      <div class="tl__roc">
+        <div class="tl__cmhead">Точність–повнота: AP = <b data-check="ap">{{ fmt3(pr.ap) }}</b></div>
+        <svg :viewBox="`0 0 ${W} ${H}`" role="img" aria-label="Крива точність–повнота">
+          <line :x1="rx(0)" :y1="ry(pr.base)" :x2="rx(1)" :y2="ry(pr.base)" class="tl__diag" />
+          <text :x="rx(1)" :y="ry(pr.base) - 4" class="tl__lbl" text-anchor="end">базовий рівень {{ fmt2(pr.base) }}</text>
+          <polyline :points="prPath" class="tl__curve" />
+          <circle :cx="rx(rec)" :cy="ry(prec)" r="5" class="tl__pt" />
+          <line :x1="PAD" :y1="H - PAD" :x2="W - PAD" :y2="H - PAD" class="tl__axis" />
+          <line :x1="PAD" :y1="PAD" :x2="PAD" :y2="H - PAD" class="tl__axis" />
+          <text :x="W / 2" :y="H - 6" class="tl__lbl" text-anchor="middle">повнота</text>
+          <text :x="10" :y="H / 2" class="tl__lbl" text-anchor="middle"
+                :transform="`rotate(-90 10 ${H / 2})`">точність</text>
         </svg>
       </div>
     </div>
 
     <div class="lab__stats">
-      <div class="lab__stat"><b>{{ pct(rec) }}</b><span>повнота: скільки злоякісних знайдено</span></div>
-      <div class="lab__stat"><b>{{ pct(prec) }}</b><span>точність: скільки тривог справдилися</span></div>
-      <div class="lab__stat"><b>{{ pct(f1) }}</b><span>F1</span></div>
+      <div class="lab__stat"><b data-check="rec">{{ fmt3(rec) }}</b><span>повнота: скільки злоякісних знайдено</span></div>
+      <div class="lab__stat"><b data-check="prec">{{ fmt3(prec) }}</b><span>точність: скільки тривог справдилися</span></div>
+      <div class="lab__stat"><b>{{ fmt3(f1) }}</b><span>F1 — гармонічне середнє точності й повноти</span></div>
       <div class="lab__stat" :class="cm.fn > 2 ? 'is-warm' : 'is-green'">
         <b>{{ cm.fn }}</b><span>пропущено злоякісних пухлин</span>
       </div>
       <div class="lab__stat" :class="cost <= best.cost ? 'is-green' : 'is-warm'">
-        <b>{{ cost }}</b><span>сумарна ціна помилок; найменша можлива {{ best.cost }}</span>
+        <b>{{ cost }}</b><span>сумарна ціна помилок; мінімум на цих 171 пацієнтках — {{ best.cost }}</span>
       </div>
     </div>
 
     <p class="lab__note">
       Зсуньте поріг до 0,1 — пропусків стане один замість чотирьох, а хибних тривог
-      чотирнадцять замість чотирьох. Це той самий обмін, що на рисунку. Жодна
+      чотирнадцять замість чотирьох. Це той самий обмін, що в розділі «Поріг рухає
+      матрицю похибок». Точка на ROC-кривій при цьому повзе вправо й угору, а на
+      кривій точність–повнота — вправо й униз: повнота росте, точність падає. Жодна
       метрика не скаже, який поріг правильний: це вирішує ціна помилки в клініці,
-      а не модель. ROC-AUC при цьому не змінюється взагалі — крива описує модель на
-      всіх порогах одразу, тому вибір порога вона не підказує.
-      Поріг 0,434 для максимуму F1 пораховано нижче, у розділі «Поріг можна
+      а не модель. AUC і AP при цьому не змінюються взагалі — криві описують модель на
+      всіх порогах одразу, тому вибір порога вони не підказують.
+      Поріг {{ fmt2(data.f1_threshold) }} для максимуму F1 пораховано нижче, у розділі «Поріг можна
       підбирати автоматично», а формулу порога за Баєсом виведено в розділі
       «Три способи жити з дисбалансом коштують по-різному».
     </p>
@@ -223,13 +270,14 @@ const PRESETS = [
 
 <style scoped>
 .tl__slider { display: block; margin-bottom: 1.1rem; }
-.tl__grid {
+.tl__grid { max-width: 30rem; }
+.tl__curves {
   display: grid;
-  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(min(230px, 100%), 1fr));
   gap: 1.2rem;
+  margin-top: 1rem;
   align-items: start;
 }
-@media (max-width: 700px) { .tl__grid { grid-template-columns: 1fr; } }
 
 .tl__cmhead {
   font-size: 0.78rem;
