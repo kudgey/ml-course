@@ -82,9 +82,6 @@
   "Функція втрат опукла, тому градієнтний спуск працює": {
     "widget": "DescentLab"
   },
-  "Зважування класів псує ймовірності, калібрування їх лагодить": {
-    "widget": "CalibrationLab"
-  },
   "На рідкісному класі ROC-крива оманлива": {
     "materials": [
       {
@@ -92,6 +89,35 @@
         "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0118432",
         "kind": "стаття",
         "note": "Стаття в PLOS ONE, де показано на симуляціях, коли саме ROC вводить в оману."
+      }
+    ]
+  },
+  "Калібрування лагодить зважену модель": {
+    "widget": "CalibrationLab"
+  },
+  "Дисбаланс класів: у чому проблема": {
+    "materials": [
+      {
+        "title": "Google · Imbalanced datasets",
+        "url": "https://developers.google.com/machine-learning/crash-course/overfitting/imbalanced-datasets",
+        "kind": "курс",
+        "note": "Короткий розбір дисбалансу з прикладами недодискретизації і зважування."
+      },
+      {
+        "title": "imbalanced-learn · User guide",
+        "url": "https://imbalanced-learn.org/stable/user_guide.html",
+        "kind": "документація",
+        "note": "Бібліотека з передискретизацією, SMOTE, недодискретизацією і конвеєрами, що роблять їх усередині фолдів."
+      }
+    ]
+  },
+  "Метрики для незбалансованих класів": {
+    "materials": [
+      {
+        "title": "scikit-learn · matthews_corrcoef",
+        "url": "https://scikit-learn.org/stable/modules/generated/sklearn.metrics.matthews_corrcoef.html",
+        "kind": "документація",
+        "note": "Формула MCC і приклад обчислення."
       }
     ]
   }
