@@ -8,6 +8,7 @@
  * браузерну звірку віджета з цим файлом робить course-site/check_lec05_widgets.mjs.
  */
 import { ref, computed } from 'vue'
+import data from '../../data/lec05_sigmoid.json'
 
 const d = ref(2)
 const norm = ref(1)
@@ -23,6 +24,8 @@ const PRESETS = [
   { label: 'z = −2', d: -2, w: 1 },
   { label: 'p = 0,9', d: Math.log(9), w: 1 },  // log 9 = 2,197
   { label: 'd = 1, ‖w‖ = 5', d: 1, w: 5 },
+  // довжина вектора ваг моделі з рисунка (код розділу «Геометрія»)
+  { label: `‖w‖ нашої моделі = ${String(data.model_norm.toFixed(3)).replace('.', ',')}, d = 0,5`, d: 0.5, w: data.model_norm },
 ]
 const isOn = (pr: { d: number; w: number }) =>
   Math.abs(d.value - pr.d) < 1e-9 && Math.abs(norm.value - pr.w) < 1e-9
@@ -100,6 +103,8 @@ const fOdds = (v: number) =>
       ‖w‖ = 1 точка отримує 0,731, при ‖w‖ = 5 — уже 0,993. Межа рішення
       (d = 0) при цьому не рухається: довжина вектора ваг змінює лише те, як
       різко модель перемикається з «ні» на «так», тобто її впевненість.
+      Остання кнопка ставить довжину вектора ваг нашої моделі з рисунка,
+      3,783: уже на відстані 0,5 від межі ймовірність 0,869.
     </p>
   </div>
 </template>

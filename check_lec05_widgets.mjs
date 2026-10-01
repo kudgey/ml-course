@@ -53,6 +53,7 @@ await click(ST, 'p = 0,9')
 eq('SigmoidLab логіт при p = 0,9', await read(ST, '[data-check="z"]'), uk(sig.logit))
 eq('SigmoidLab шанси при p = 0,9', await read(ST, '[data-check="odds"]'), uk(sig.odds))
 await click(ST, 'd = 1'); eq('SigmoidLab σ(5)', await read(ST, '[data-check="p"]'), uk(sig.d1_w5))
+await click(ST, '‖w‖ нашої'); eq('SigmoidLab ‖w‖ моделі, d = 0,5', await read(ST, '[data-check="p"]'), uk(sig.model_p_half))
 
 const DT = 'Градієнтний спуск на справжній'
 const s0 = desc.path[0], s1 = desc.path[1], s60 = desc.path[60]
