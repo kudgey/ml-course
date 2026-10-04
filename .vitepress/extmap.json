@@ -136,5 +136,11 @@
  "https://scikit-learn.org/stable/_images/sphx_glr_plot_underfitting_overfitting_001.png": "/figs/ext/scikit-learn.org-fe3bc0-sphx_glr_plot_underfitting_overfitting_001.png",
  "https://scikit-learn.org/stable/_images/sphx_glr_plot_unveil_tree_structure_001.png": "/figs/ext/scikit-learn.org-ca74af-sphx_glr_plot_unveil_tree_structure_001.png",
  "https://imbalanced-learn.org/stable/_images/sphx_glr_plot_comparison_under_sampling_002.png": "/figs/ext/imbalanced-learn.org-724828-sphx_glr_plot_comparison_under_sampling_002.png",
- "https://imbalanced-learn.org/stable/_images/sphx_glr_plot_illustration_generation_sample_001.png": "/figs/ext/imbalanced-learn.org-3a1e2e-sphx_glr_plot_illustration_generation_sample_001.png"
+ "https://imbalanced-learn.org/stable/_images/sphx_glr_plot_illustration_generation_sample_001.png": "/figs/ext/imbalanced-learn.org-3a1e2e-sphx_glr_plot_illustration_generation_sample_001.png",
+ "https://lightgbm.readthedocs.io/en/latest/_images/leaf-wise.png": "/figs/ext/lightgbm.readthedocs.io-ff8d9c-leaf-wise.png",
+ "https://raw.githubusercontent.com/dmlc/web-data/master/xgboost/model/struct_score.png": "/figs/ext/raw.githubusercontent.com-4194e8-struct_score.png",
+ "https://upload.wikimedia.org/wikipedia/commons/4/4e/Random_forest_explain.png": "/figs/ext/upload.wikimedia.org-e7ce12-Random_forest_explain.png",
+ "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Ensemble_Boosting.svg/1280px-Ensemble_Boosting.svg.png": "/figs/ext/upload.wikimedia.org-0b1be9-1280px-Ensemble_Boosting.svg.png",
+ "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Ensemble_Bagging.svg/1280px-Ensemble_Bagging.svg.png": "/figs/ext/upload.wikimedia.org-9f3646-1280px-Ensemble_Bagging.svg.png",
+ "https://lightgbm.readthedocs.io/en/latest/_images/level-wise.png": "/figs/ext/lightgbm.readthedocs.io-371919-level-wise.png"
 }

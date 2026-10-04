@@ -35,6 +35,8 @@ import SigmoidLab from './components/SigmoidLab.vue'
 import DescentLab from './components/DescentLab.vue'
 import CalibrationLab from './components/CalibrationLab.vue'
 import SoftmaxLab from './components/SoftmaxLab.vue'
+import ForestLab from './components/ForestLab.vue'
+import BoostingLab from './components/BoostingLab.vue'
 
 export default {
   extends: DefaultTheme,
@@ -74,5 +76,7 @@ export default {
     app.component('DescentLab', DescentLab)
     app.component('CalibrationLab', CalibrationLab)
     app.component('SoftmaxLab', SoftmaxLab)
+    app.component('ForestLab', ForestLab)
+    app.component('BoostingLab', BoostingLab)
   },
 } satisfies Theme
