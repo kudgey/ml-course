@@ -25,22 +25,6 @@
       }
     ]
   },
-  "Корельовані ознаки ламають обидві міри": {
-    "materials": [
-      {
-        "title": "scikit-learn · Permutation Importance with Multicollinear Features",
-        "url": "https://scikit-learn.org/stable/auto_examples/inspection/plot_permutation_importance_multicollinear.html",
-        "kind": "документація",
-        "note": "Готовий рецепт: кластеризація ознак за кореляцією перед вимірюванням важливості."
-      },
-      {
-        "title": "Molnar C. Interpretable Machine Learning",
-        "url": "https://christophm.github.io/interpretable-ml-book/feature-importance.html",
-        "kind": "книга",
-        "note": "Розділ про важливість ознак: що вона означає й чого не означає."
-      }
-    ]
-  },
   "Бустинг: кожне наступне дерево вчиться на залишках": {
     "materials": [
       {
@@ -78,5 +62,21 @@
   },
   "Градієнтний бустинг покроково: залишки на восьми районах": {
     "widget": "BoostingLab"
+  },
+  "Важливість ознак: за зменшенням домішки і перестановкою": {
+    "materials": [
+      {
+        "title": "scikit-learn · Permutation Importance with Multicollinear Features",
+        "url": "https://scikit-learn.org/stable/auto_examples/inspection/plot_permutation_importance_multicollinear.html",
+        "kind": "документація",
+        "note": "Готовий рецепт: кластеризація ознак за кореляцією перед вимірюванням важливості."
+      },
+      {
+        "title": "Molnar C. Interpretable Machine Learning",
+        "url": "https://christophm.github.io/interpretable-ml-book/feature-importance.html",
+        "kind": "книга",
+        "note": "Розділ про важливість ознак: що вона означає й чого не означає."
+      }
+    ]
   }
 }
