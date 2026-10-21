@@ -1,5 +1,5 @@
 /**
- * Звірка віджетів Л07 KernelLab, SlackLab і AlphaLab із даними генератора
+ * Звірка віджетів Л07 (KernelLab, SlackLab, AlphaLab, HingeLossLab, SvmToyLab) із даними генератора
  * (tools/gen_lec07_svm.py). Числа приміток генератор звіряє з тими самими
  * даними, тож збіг тут означає збіг і з текстом.
  *
@@ -90,8 +90,13 @@ const HT = 'Дві втрати на шести'
 const L = toy.loss
 eq('HingeLossLab ПЕ при w = 0,5', await read(HT, '[data-check="mlog"]'), uk(L.ref.mlog05, 4))
 eq('HingeLossLab hinge при w = 0,5', await read(HT, '[data-check="mhinge"]'), uk(L.ref.mhinge05, 4))
+eq('HingeLossLab межа при w = 0,5', await read(HT, '[data-check="x0"]'), uk(0, 2))
+eq('HingeLossLab штрихова g = −1 при w = 0,5', await read(HT, '[data-check="xm"]'), uk(-2, 2))
+eq('HingeLossLab штрихова g = +1 при w = 0,5', await read(HT, '[data-check="xp"]'), uk(2, 2))
 await clickNth(HT, '.lab__pill', 2)
 eq('HingeLossLab мінімум hinge', await read(HT, '[data-check="jhinge"]'), uk(L.ref.jhinge_opt, 4))
+eq('HingeLossLab штрихові на мінімумі hinge', [await read(HT, '[data-check="xm"]'), await read(HT, '[data-check="xp"]')].join(' '),
+   `${uk(-1, 2)} ${uk(1, 2)}`)
 await clickNth(HT, '.lab__pill', 1)
 eq('HingeLossLab мінімум ПЕ', await read(HT, '[data-check="jlog"]'), uk(L.ref.jlog_opt, 4))
 eq('HingeLossLab p(x = 1)', await read(HT, '[data-check="p1"]'), uk(L.ref.p1_opt))
@@ -106,6 +111,21 @@ await clickNth(TT, 'g.st__pt', 4)
 const gE = T.w[0] * T.X[4][0] + T.w[1] * T.X[4][1] + T.w0
 eq('SvmToyLab g(E)', await read(TT, '[data-check="g"]'), uk(gE, 2))
 eq('SvmToyLab відстань E', await read(TT, '[data-check="dist"]'), uk(Math.abs(gE) / nw, 2))
+const kk = -T.w[0] / T.w[1], bb = -T.w0 / T.w[1]
+eq('SvmToyLab шкільне рівняння', `${await read(TT, '[data-check="k"]')} ${await read(TT, '[data-check="b"]')}`, `${uk(kk, 2)} ${uk(bb, 2)}`)
+// «×2»: пряма й відстані стоять, g і ‖w‖ подвоюються, коридор удвічі вужчий
+await clickNth(TT, '.lab__pill', 1)
+eq('SvmToyLab ×2: ‖w‖', await read(TT, '[data-check="norm"]'), uk(2 * nw))
+eq('SvmToyLab ×2: ширина', await read(TT, '[data-check="width"]'), uk(1 / nw, 2))
+eq('SvmToyLab ×2: g(E)', await read(TT, '[data-check="g"]'), uk(2 * gE, 2))
+eq('SvmToyLab ×2: відстань E', await read(TT, '[data-check="dist"]'), uk(Math.abs(gE) / nw, 2))
+eq('SvmToyLab ×2: пряма', `${await read(TT, '[data-check="k"]')} ${await read(TT, '[data-check="b"]')}`, `${uk(kk, 2)} ${uk(bb, 2)}`)
+await clickNth(TT, '.lab__pill', 2)
+await clickNth(TT, '.lab__pill', 2)
+eq('SvmToyLab ÷2: найменше η', await read(TT, '[data-check="mineta"]'), uk(0.5, 2))
+eq('SvmToyLab ÷2: відстань E', await read(TT, '[data-check="dist"]'), uk(Math.abs(gE) / nw, 2))
+await clickNth(TT, '.lab__pill', 0)
+eq('SvmToyLab знову оптимум', await read(TT, '[data-check="norm"]'), uk(nw))
 
 if (errs.length) problems.push(`помилки JS: ${errs.slice(0, 2).join(' | ')}`)
 await b.close()

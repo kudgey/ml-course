@@ -1,8 +1,8 @@
 <script setup lang="ts">
 /**
  * Двоїсті змінні α_n на тих самих 100 квітках versicolor і virginica, що в
- * SlackLab: SVC(kernel="linear", C = 1). При C = 1 значення |dual_coef_|
- * scikit-learn збігаються з α_n ∈ [0, 1] із формули лекції. Клацання по точці
+ * SlackLab: SVC(kernel="linear", C = 1). |dual_coef_| scikit-learn — це
+ * α_n ∈ [0, C] із формули лекції, тут C = 1. Клацання по точці
  * показує її α_n, 1 − η_n і рядок таблиці розділу «Значення альфа розказує, де
  * лежить точка»; праворуч ваги збираються як w = Σ α_n y_n x_n. Дані пише
  * tools/gen_lec07_svm.py, браузерну звірку робить check_lec07_widgets.mjs.
@@ -33,8 +33,8 @@ const cur = computed(() => pts[sel.value])
 const f = (v: number, nd: number) => (Math.abs(v) < 0.5 * 10 ** -nd ? 0 : v).toFixed(nd).replace('.', ',').replace('-', '−')
 const ROWS = [
   ['правильний бік, за коридором', '1 − η < 0', 'α = 0'],
-  ['точно на межі коридору', '1 − η = 0', 'α — будь-яке з [0, 1]'],
-  ['усередині коридору або на чужому боці', '1 − η > 0', 'α = 1'],
+  ['точно на межі коридору', '1 − η = 0', 'α — будь-яке з [0, C]'],
+  ['усередині коридору або на чужому боці', '1 − η > 0', 'α = C'],
 ]
 
 const VW = 320, VH = 220, P = 26
@@ -94,7 +94,7 @@ const COL: Record<number, string> = { [-1]: '#C2571A', 1: '#1E8E6A' }
     <div class="lab__stats">
       <div class="lab__stat"><b data-check="c0">{{ counts[0] }}</b><span>за коридором</span></div>
       <div class="lab__stat"><b data-check="c1">{{ counts[1] }}</b><span>на межі коридору</span></div>
-      <div class="lab__stat is-warm"><b data-check="c2">{{ counts[2] }}</b><span>порушників, α = 1</span></div>
+      <div class="lab__stat is-warm"><b data-check="c2">{{ counts[2] }}</b><span>порушників, α = C = 1</span></div>
       <div class="lab__stat"><b data-check="nsv">{{ nSV }}</b><span>опорних векторів, α &gt; 0</span></div>
       <div class="lab__stat is-green"><b data-check="w">({{ f(wA[0], 3) }}; {{ f(wA[1], 3) }})</b><span>w = Σ αₙ yₙ xₙ</span></div>
     </div>
@@ -103,7 +103,7 @@ const COL: Record<number, string> = { [-1]: '#C2571A', 1: '#1E8E6A' }
       Ваги, зібрані лише з опорних векторів, — ({{ f(wA[0], 3) }}; {{ f(wA[1], 3) }}) —
       збігаються з тими, що повертає SVC: ({{ f(W[0], 3) }}; {{ f(W[1], 3) }}); сума
       α·y дорівнює {{ f(sumAY, 3) }}, як і вимагає зсув w₀. 75 квіток за коридором
-      мають α = 0 й у формулу не входять. 21 порушник має α = 1. На межі коридору лежать
+      мають α = 0 й у формулу не входять. 21 порушник має α = C = 1. На межі коридору лежать
       4 квітки — дві пари з однаковими вимірами, — і в них α справді буває будь-яким:
       0, 0,707 і 1. Разом опорних векторів 24.
     </p>

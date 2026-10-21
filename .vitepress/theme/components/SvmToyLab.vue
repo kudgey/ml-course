@@ -4,8 +4,10 @@
  * для кожної точки віджет рахує g = w₁x₁ + w₂x₂ + w₀, η = y·g, ξ = max(0, 1 − η)
  * і відстань |g|/‖w‖, а внизу — ширину коридору 2/‖w‖ і ціль ½‖w‖² + C·Σξ з
  * C = 1. Кнопка ставить розв'язок SVC(kernel="linear") зі scikit-learn:
- * w = (0,4; 0,4), w₀ = −2,2. Дані пише tools/gen_lec07_svm.py і звіряє ці
- * числа з розрахунком у тексті розділу.
+ * w = (0,4; 0,4), w₀ = −2,2. Червона стрілка — вектор w у справжню довжину,
+ * перпендикулярний до межі; пунктир — перпендикуляр від обраної точки до межі.
+ * Кнопки «×2» і «÷2» множать усі три числа: пряма стоїть, змінюються g і ‖w‖.
+ * Дані пише tools/gen_lec07_svm.py і звіряє ці числа з розрахунком у тексті.
  */
 import { ref, computed } from 'vue'
 import data from '../../data/lec07_toy.json'
@@ -35,6 +37,20 @@ const cur = computed(() => rows.value[sel.value])
 const f = (v: number, nd = 2) => (Math.abs(v) < 0.5 * 10 ** -nd ? 0 : v).toFixed(nd).replace('.', ',').replace('-', '−')
 const sgn = (v: number) => (v < 0 ? ' − ' + f(-v) : ' + ' + f(v))
 function optimum() { w1.value = T.w[0]; w2.value = T.w[1]; w0.value = T.w0 }
+function scale(k: number) { w1.value *= k; w2.value *= k; w0.value *= k }
+
+/** Основа перпендикуляра з точки q на пряму g = 0. */
+const foot = (q: number[]) => {
+  const g = w1.value * q[0] + w2.value * q[1] + w0.value
+  const n2 = norm.value * norm.value
+  return [q[0] - (g / n2) * w1.value, q[1] - (g / n2) * w2.value]
+}
+const inBox = (q: number[]) => q[0] > X0 && q[0] < X1 && q[1] > Y0 && q[1] < Y1
+// стрілку w малюємо з порожнього кута, щоб не накласти на перпендикуляр
+const anchor = computed(() => { const a = foot([5.5, 1]); return inBox(a) ? a : foot([3, 3.25]) })
+const selFoot = computed(() => foot(cur.value.x))
+const slope = computed(() => (Math.abs(w2.value) > 1e-9 ? -w1.value / w2.value : NaN))
+const icept = computed(() => (Math.abs(w2.value) > 1e-9 ? -w0.value / w2.value : NaN))
 
 const VW = 300, VH = 270, P = 26
 const [X0, X1, Y0, Y1] = [-0.5, 6.5, -0.5, 7]
@@ -49,6 +65,7 @@ function line(level: number) {            // точки, де g = level
   return `${px(xc)},${py(Y0)} ${px(xc)},${py(Y1)}`
 }
 const COL: Record<number, string> = { [-1]: '#2F6DB5', 1: '#C2571A' }
+const UX = (VW - 2 * P) / (X1 - X0)       // пікселів на одиницю по x₁ (по x₂ — так само)
 </script>
 
 <template>
@@ -57,9 +74,10 @@ const COL: Record<number, string> = { [-1]: '#2F6DB5', 1: '#C2571A' }
       <div>
         <div class="lab__title">SVM на шести точках: усе руками</div>
         <div class="lab__sub">
-          Пряма g(x) = w₁x₁ + w₂x₂ + w₀ = 0 ділить площину; штрихові — лінії g = −1 і
-          g = +1, межі коридору. Рухайте ваги й дивіться, як змінюються η, ξ і ширина
-          коридору. Клацніть по точці — побачите її розрахунок.
+          Площина — це дві ознаки x₁ і x₂. Модель має три числа: вагу на кожну ознаку
+          (w₁, w₂) і зсув w₀. Пряма g = w₁x₁ + w₂x₂ + w₀ = 0 ділить площину; штрихові —
+          лінії g = −1 і g = +1, межі коридору; червона стрілка — вектор w, перпендикулярний
+          до межі. Клацніть по точці — побачите її розрахунок і перпендикуляр до межі.
         </div>
       </div>
     </div>
@@ -72,7 +90,16 @@ const COL: Record<number, string> = { [-1]: '#2F6DB5', 1: '#C2571A' }
           <polyline :points="line(1)" class="st__margin" />
           <polyline :points="line(-1)" class="st__margin" />
           <polyline :points="line(0)" class="st__bound" />
+          <line :x1="px(cur.x[0])" :y1="py(cur.x[1])" :x2="px(selFoot[0])" :y2="py(selFoot[1])" class="st__perp" />
         </g>
+        <defs>
+          <marker id="st-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="#B3312C" />
+          </marker>
+        </defs>
+        <line :x1="px(anchor[0])" :y1="py(anchor[1])" :x2="px(anchor[0] + w1)" :y2="py(anchor[1] + w2)"
+              class="st__w" marker-end="url(#st-arrow)" />
+        <text :x="px(anchor[0] + w1) + 6" :y="py(anchor[1] + w2) + 4" class="st__wl">w</text>
         <g v-for="(r, i) in rows" :key="i" class="st__pt" @click="sel = i">
           <circle v-if="r.eta <= 1 + 1e-6" :cx="px(r.x[0])" :cy="py(r.x[1])" r="10" class="st__ring" />
           <circle :cx="px(r.x[0])" :cy="py(r.x[1])" r="6" :fill="COL[r.y]" />
@@ -87,22 +114,34 @@ const COL: Record<number, string> = { [-1]: '#2F6DB5', 1: '#C2571A' }
       <div class="st__side">
         <label class="lab__ctl">
           <span>w₁ = <b>{{ f(w1) }}</b></span>
-          <input type="range" min="-0.2" max="1.2" step="0.02" v-model.number="w1" />
+          <input type="range" min="-0.4" max="2.4" step="0.02" v-model.number="w1" />
         </label>
         <label class="lab__ctl">
           <span>w₂ = <b>{{ f(w2) }}</b></span>
-          <input type="range" min="-0.2" max="1.2" step="0.02" v-model.number="w2" />
+          <input type="range" min="-0.4" max="2.4" step="0.02" v-model.number="w2" />
         </label>
         <label class="lab__ctl">
           <span>w₀ = <b>{{ f(w0) }}</b></span>
-          <input type="range" min="-6" max="0" step="0.05" v-model.number="w0" />
+          <input type="range" min="-12" max="2" step="0.05" v-model.number="w0" />
         </label>
-        <button class="lab__pill" @click="optimum">оптимум SVM (scikit-learn)</button>
+        <div class="st__btns">
+          <button class="lab__pill" @click="optimum">оптимум SVM (scikit-learn)</button>
+          <button class="lab__pill" @click="scale(2)">усі три числа ×2</button>
+          <button class="lab__pill" @click="scale(0.5)">усі три числа ÷2</button>
+        </div>
         <p class="st__calc">
           <b>{{ cur.name }}</b> = ({{ f(cur.x[0], 0) }}; {{ f(cur.x[1], 0) }}), y = {{ cur.y > 0 ? '+1' : '−1' }}<br>
           g = {{ f(w1) }}·{{ f(cur.x[0], 0) }} + {{ f(w2) }}·{{ f(cur.x[1], 0) }}{{ sgn(w0) }} = <b data-check="g">{{ f(cur.g) }}</b><br>
           η = y·g = <b data-check="eta">{{ f(cur.eta) }}</b>, ξ = max(0, 1 − η) = <b data-check="xi">{{ f(cur.xi) }}</b><br>
           відстань = |g| / ‖w‖ = {{ f(Math.abs(cur.g)) }} / {{ f(norm, 3) }} = <b data-check="dist">{{ f(cur.dist) }}</b>
+        </p>
+        <p class="st__calc">
+          ‖w‖ = √(w₁² + w₂²) = √({{ f(w1) }}² + {{ f(w2) }}²) = {{ f(norm, 3) }}<br>
+          <template v-if="!Number.isNaN(slope)">
+            пряма g = 0 у вигляді x₂ = k·x₁ + b:<br>
+            k = −w₁/w₂ = <b data-check="k">{{ f(slope) }}</b>, b = −w₀/w₂ = <b data-check="b">{{ f(icept) }}</b>
+          </template>
+          <template v-else>w₂ = 0: пряма вертикальна, x₁ = {{ f(-w0 / w1) }}</template>
         </p>
       </div>
     </div>
@@ -126,9 +165,11 @@ const COL: Record<number, string> = { [-1]: '#2F6DB5', 1: '#C2571A' }
     <p class="lab__note">
       На оптимумі w = (0,4; 0,4), w₀ = −2,2: точки A, B і D лежать рівно на межах
       коридору (η = 1) — це опорні вектори, а C, E і F мають η від 1,4 до 1,8.
-      ‖w‖ = 0,566, ширина коридору 3,54, ½‖w‖² = 0,160. Збільште w₁ і w₂ разом —
-      коридор звузиться, ціль зросте. Зменште — коридор розшириться, але A, B і D
-      зайдуть усередину (η &lt; 1), з'являться ξ &gt; 0, і ціль знову зросте.
+      ‖w‖ = 0,566, ширина коридору 3,54, ½‖w‖² = 0,160. Натисніть «×2»: пряма і всі
+      відстані не зміняться, але g, η і ‖w‖ подвояться, а штрихові лінії g = ±1
+      підійдуть до межі — коридор звузиться до 1,77, і ціль зросте. «÷2» — навпаки:
+      коридор ширшає, але A, B і D опиняються всередині (η = 0,5 &lt; 1), з'являються
+      ξ &gt; 0, і ціль теж зростає. Мінімум — рівно там, де найближчі точки мають η = 1.
     </p>
   </div>
 </template>
@@ -156,6 +197,10 @@ const COL: Record<number, string> = { [-1]: '#2F6DB5', 1: '#C2571A' }
 .st__ring { fill: none; stroke: #6B4C9A; stroke-width: 2; }
 .st__sel { fill: none; stroke: var(--vp-c-text-1); stroke-width: 1.3; stroke-dasharray: 2 2; pointer-events: none; }
 .st__pt { cursor: pointer; }
+.st__perp { stroke: #6B4C9A; stroke-width: 1.6; stroke-dasharray: 2 3; }
+.st__w { stroke: #B3312C; stroke-width: 2.4; }
+.st__wl { fill: #B3312C; font-size: 11px; font-weight: 700; }
+.st__btns { display: flex; flex-wrap: wrap; gap: 0.4rem; }
 .st__name { fill: var(--vp-c-text-1); font-size: 11px; font-weight: 600; }
 .st__lbl { fill: var(--vp-c-text-3); font-size: 10px; }
 .st__calc {
