@@ -84,6 +84,29 @@ for (const want of [0, 2]) {
   eq(`AlphaLab точка ${i}, 1 − η`, await read(AT, '[data-check="one-eta"]'), uk(1 - eta[i]))
 }
 
+// ── HingeLossLab: w = 0,5 і два мінімуми ──
+const toy = J('lec07_toy.json')
+const HT = 'Дві втрати на шести'
+const L = toy.loss
+eq('HingeLossLab ПЕ при w = 0,5', await read(HT, '[data-check="mlog"]'), uk(L.ref.mlog05, 4))
+eq('HingeLossLab hinge при w = 0,5', await read(HT, '[data-check="mhinge"]'), uk(L.ref.mhinge05, 4))
+await clickNth(HT, '.lab__pill', 2)
+eq('HingeLossLab мінімум hinge', await read(HT, '[data-check="jhinge"]'), uk(L.ref.jhinge_opt, 4))
+await clickNth(HT, '.lab__pill', 1)
+eq('HingeLossLab мінімум ПЕ', await read(HT, '[data-check="jlog"]'), uk(L.ref.jlog_opt, 4))
+eq('HingeLossLab p(x = 1)', await read(HT, '[data-check="p1"]'), uk(L.ref.p1_opt))
+
+// ── SvmToyLab: оптимум і розрахунок однієї точки ──
+const TT = 'SVM на шести точках'
+const T = toy.toy, nw = Math.hypot(T.w[0], T.w[1])
+eq('SvmToyLab ‖w‖', await read(TT, '[data-check="norm"]'), uk(nw))
+eq('SvmToyLab ширина', await read(TT, '[data-check="width"]'), uk(2 / nw, 2))
+eq('SvmToyLab найменше η', await read(TT, '[data-check="mineta"]'), uk(1, 2))
+await clickNth(TT, 'g.st__pt', 4)
+const gE = T.w[0] * T.X[4][0] + T.w[1] * T.X[4][1] + T.w0
+eq('SvmToyLab g(E)', await read(TT, '[data-check="g"]'), uk(gE, 2))
+eq('SvmToyLab відстань E', await read(TT, '[data-check="dist"]'), uk(Math.abs(gE) / nw, 2))
+
 if (errs.length) problems.push(`помилки JS: ${errs.slice(0, 2).join(' | ')}`)
 await b.close()
 console.log(problems.length ? 'РОЗБІЖНОСТІ:\n  ' + problems.join('\n  ') : 'віджети Л07 збігаються з даними генератора й текстом ✓')

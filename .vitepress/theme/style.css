@@ -768,3 +768,12 @@ html.uk-pres .uk-figure__frame img {
 /* сітки віджетів не мають розповзатися ширше за колонку */
 .lab > div,
 .lab section { min-width: 0; }
+
+/* Блоки «::: info Розрахунок» — покрокові обчислення в лекціях: відкриті, з акцентною смугою */
+.vp-doc .custom-block.info {
+  border: 1px solid var(--uk-line);
+  border-left: 4px solid var(--uk-accent);
+  background: var(--uk-accent-soft);
+}
+.vp-doc .custom-block.info .custom-block-title { color: var(--uk-accent); }
+.vp-doc .custom-block.info table { margin: 0.6rem 0; }
