@@ -27,6 +27,8 @@ import BackpropLab from './components/BackpropLab.vue'
 import AttentionLab from './components/AttentionLab.vue'
 import WordVectorLab from './components/WordVectorLab.vue'
 import KernelLab from './components/KernelLab.vue'
+import SlackLab from './components/SlackLab.vue'
+import AlphaLab from './components/AlphaLab.vue'
 import PositionalLab from './components/PositionalLab.vue'
 import DiffusionLab from './components/DiffusionLab.vue'
 import LikelihoodLab from './components/LikelihoodLab.vue'
@@ -68,6 +70,8 @@ export default {
     app.component('AttentionLab', AttentionLab)
     app.component('WordVectorLab', WordVectorLab)
     app.component('KernelLab', KernelLab)
+    app.component('SlackLab', SlackLab)
+    app.component('AlphaLab', AlphaLab)
     app.component('PositionalLab', PositionalLab)
     app.component('DiffusionLab', DiffusionLab)
     app.component('LikelihoodLab', LikelihoodLab)
