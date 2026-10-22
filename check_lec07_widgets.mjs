@@ -81,7 +81,7 @@ for (const want of [0, 2]) {
   const i = eta.findIndex(e => (want === 0 ? e > 1 + sl.tol : e < 1 - sl.tol))
   await clickNth(AT, 'g.al__pt', i)
   eq(`AlphaLab точка ${i}, α`, await read(AT, '[data-check="alpha"]'), uk(sl.alpha[i]))
-  eq(`AlphaLab точка ${i}, 1 − η`, await read(AT, '[data-check="one-eta"]'), uk(1 - eta[i]))
+  eq(`AlphaLab точка ${i}, η`, await read(AT, '[data-check="eta"]'), uk(eta[i]))
 }
 
 // ── HingeLossLab: w = 0,5 і два мінімуми ──
