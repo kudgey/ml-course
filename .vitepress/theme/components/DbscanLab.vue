@@ -1,169 +1,90 @@
 <script setup lang="ts">
 /**
- * DBSCAN на трьох наборах, які по-різному ламають алгоритм: півмісяці,
- * згустки різної щільності та пара «щільний і розріджений». Мітки для всіх
- * комбінацій ε і minPts обчислено заздалегідь тим самим scikit-learn.
- * Кнопка знизу показує, що на тих самих даних робить K-means.
+ * DBSCAN на тих самих півмісяцях із фоном, що в лекції 08 (рис. 12, 14, 15,
+ * таблиця 1): один повзунок ε при min_samples = 5, кнопка «ε зі зламу» і
+ * перемикач на K-means із K = 2. Мітки для кожного ε обчислено заздалегідь
+ * тим самим scikit-learn — tools/gen_lec08_dbscan.py.
  */
 import { ref, computed } from 'vue'
 import d from '../../data/lec08_dbscan.json'
 
-const NAMES = Object.keys(d.sets)
-const set = ref(NAMES[0])
-const ei = ref(d.eps.indexOf(0.3) >= 0 ? d.eps.indexOf(0.3) : 4)
-const mi = ref(1)
-const mode = ref<'db' | 'hdb' | 'km'>('db')
-const kmK = ref(2)
-const hi = ref(1)                       // індекс у d.mcs
+const EPS = d.runs.map(r => r.eps)
+const KNEE = EPS.indexOf(d.knee)
+const ei = ref(KNEE)
+const showKm = ref(false)
 
-const cur = computed(() => (d.sets as any)[set.value])
-const eps = computed(() => d.eps[ei.value])
-const minpts = computed(() => d.minpts[mi.value])
-const mcs = computed(() => (d as any).mcs[hi.value])
-const res = computed(() => mode.value === 'hdb'
-  ? cur.value.hdb[String(mcs.value)]
-  : cur.value.db[`${eps.value}|${minpts.value}`])
-
-/** Найкращий ARI по всій сітці ε × minPts — те, чого без міток не дізнатися. */
-const bestDb = computed(() => Math.max(
-  ...Object.values(cur.value.db as Record<string, any>).map(r => r.ari)))
-const bestHdb = computed(() => Math.max(
-  ...Object.values(cur.value.hdb as Record<string, any>).map(r => r.ari)))
-/** Частка налаштувань DBSCAN, які дають хоч скільки-небудь пристойний ARI. */
-const okShare = computed(() => {
-  const all = Object.values(cur.value.db as Record<string, any>)
-  return all.filter(r => r.ari >= 0.8 * bestDb.value).length / all.length
-})
-
-const labels = computed(() =>
-  mode.value === 'km' ? cur.value.km[String(kmK.value)].lab : res.value.lab)
+const run = computed(() => d.runs[ei.value])
+const labels = computed(() => (showKm.value ? d.km.lab : run.value.lab))
+const pts = d.X as number[][]
 
 const W = 420, H = 300, PAD = 22
-const pts = computed(() => cur.value.X as number[][])
-const ext = computed(() => {
-  const xs = pts.value.map(p => p[0]), ys = pts.value.map(p => p[1])
-  return [Math.min(...xs), Math.max(...xs), Math.min(...ys), Math.max(...ys)]
-})
-const sx = (v: number) => PAD + ((v - ext.value[0]) / (ext.value[1] - ext.value[0])) * (W - 2 * PAD)
-const sy = (v: number) => H - PAD - ((v - ext.value[2]) / (ext.value[3] - ext.value[2])) * (H - 2 * PAD)
+const xs = pts.map(p => p[0]), ys = pts.map(p => p[1])
+const ext = [Math.min(...xs), Math.max(...xs), Math.min(...ys), Math.max(...ys)]
+const sx = (v: number) => PAD + ((v - ext[0]) / (ext[1] - ext[0])) * (W - 2 * PAD)
+const sy = (v: number) => H - PAD - ((v - ext[2]) / (ext[3] - ext[2])) * (H - 2 * PAD)
 
-const COL = ['#2F6DB5', '#C2571A', '#1E8E6A', '#6B4C9A', '#B3312C',
-             '#4E9CD8', '#E08A4B', '#3FB08A', '#9578C4', '#D06560']
-const color = (l: number) => (l < 0 ? 'var(--vp-c-text-3)' : COL[l % COL.length])
-
-const noisePct = computed(() => (res.value.noise / pts.value.length * 100).toFixed(1).replace('.', ','))
-const fmt = (v: number) => v.toFixed(2).replace('.', ',')
+const COL = ['#2F6DB5', '#C2571A', '#1E8E6A', '#6B4C9A', '#8A8A96',
+             '#4E9CD8', '#E08A4B', '#3FB08A', '#9578C4', '#5F6B7A']
+const color = (l: number) => (l < 0 ? '#B3312C' : COL[l % COL.length])
+const f = (v: number, nd = 3) => v.toFixed(nd).replace('.', ',')
 </script>
 
 <template>
   <div class="lab">
     <div class="lab__head">
       <div>
-        <div class="lab__title">Той самий набір, різне ε</div>
+        <div class="lab__title">DBSCAN на півмісяцях: один параметр ε</div>
         <div class="lab__sub">
-          Три набори, кожен ламає алгоритм по-своєму. Сірі точки — шум: DBSCAN
-          не зобов'язаний віднести до кластера всіх. Кнопка внизу перемикає на
-          K-means, щоб порівняти на тих самих даних.
+          Ті самі 400 точок півмісяців і 45 точок фону, що на рис. 12; min_samples = 5.
+          Червоні хрестики — шум. Рухайте ε і порівняйте з ε зі зламу графіка відстаней.
         </div>
       </div>
     </div>
 
-    <div class="lab__pills">
-      <button v-for="n in NAMES" :key="n" class="lab__pill"
-              :class="{ 'is-on': set === n }" @click="set = n">{{ n }}</button>
-    </div>
-
-    <svg :viewBox="`0 0 ${W} ${H}`" class="db__plot" role="img"
-         aria-label="Кластери DBSCAN на обраному наборі">
-      <circle v-for="(p, i) in pts" :key="i" :cx="sx(p[0])" :cy="sy(p[1])"
-              :r="labels[i] < 0 ? 2.2 : 3.4" :fill="color(labels[i])"
-              :opacity="labels[i] < 0 ? 0.45 : 0.85" />
+    <svg :viewBox="`0 0 ${W} ${H}`" class="db__plot" role="img" aria-label="Кластери DBSCAN або K-means на півмісяцях">
+      <template v-for="(p, i) in pts" :key="i">
+        <g v-if="labels[i] < 0" :transform="`translate(${sx(p[0])} ${sy(p[1])})`" class="db__x">
+          <line x1="-3" y1="-3" x2="3" y2="3" /><line x1="-3" y1="3" x2="3" y2="-3" />
+        </g>
+        <circle v-else :cx="sx(p[0])" :cy="sy(p[1])" r="3.2" :fill="color(labels[i])" opacity="0.85" />
+      </template>
     </svg>
 
-    <div class="lab__controls" v-if="mode === 'db'">
+    <div class="lab__controls">
       <label class="lab__ctl">
-        <span>Радіус ε = <b>{{ fmt(eps) }}</b></span>
-        <input type="range" min="0" :max="d.eps.length - 1" step="1" v-model.number="ei" />
+        <span>Радіус ε = <b data-check="eps">{{ f(run.eps) }}</b></span>
+        <input type="range" min="0" :max="EPS.length - 1" step="1" v-model.number="ei" :disabled="showKm" />
       </label>
-      <label class="lab__ctl">
-        <span>minPts = <b>{{ minpts }}</b></span>
-        <input type="range" min="0" :max="d.minpts.length - 1" step="1" v-model.number="mi" />
-      </label>
-      <div class="lab__ctl">
-        <span>Порівняти з іншим методом</span>
-        <span class="db__btns">
-          <button class="lab__btn" @click="mode = 'hdb'">HDBSCAN</button>
-          <button class="lab__btn" @click="mode = 'km'">K-means</button>
-        </span>
-      </div>
+    </div>
+    <div class="lab__pills">
+      <button class="lab__pill" :class="{ 'is-on': ei === KNEE && !showKm }" @click="ei = KNEE; showKm = false">
+        ε зі зламу ({{ f(d.knee) }})
+      </button>
+      <button class="lab__pill" :class="{ 'is-on': showKm }" @click="showKm = !showKm">
+        {{ showKm ? 'повернутися до DBSCAN' : 'K-means, K = 2, для порівняння' }}
+      </button>
     </div>
 
-    <div class="lab__controls" v-else-if="mode === 'hdb'">
-      <label class="lab__ctl">
-        <span>HDBSCAN, мінімальний розмір кластера = <b>{{ mcs }}</b></span>
-        <input type="range" min="0" :max="(d as any).mcs.length - 1" step="1"
-               v-model.number="hi" />
-      </label>
-      <div class="lab__ctl">
-        <span>Повернутися</span>
-        <button class="lab__btn" @click="mode = 'db'">показати DBSCAN</button>
+    <div class="lab__stats" v-if="!showKm">
+      <div class="lab__stat"><b data-check="k">{{ run.k }}</b><span>кластерів</span></div>
+      <div class="lab__stat" :class="run.noise > 100 ? 'is-warm' : ''">
+        <b data-check="noise">{{ run.noise }}</b><span>точок шуму, з них фону {{ run.bg }} з 45</span>
       </div>
-    </div>
-
-    <div class="lab__controls" v-else>
-      <label class="lab__ctl">
-        <span>K-means, кластерів K = <b>{{ kmK }}</b></span>
-        <input type="range" min="2" max="4" step="1" v-model.number="kmK" />
-      </label>
-      <div class="lab__ctl">
-        <span>Повернутися</span>
-        <button class="lab__btn" @click="mode = 'db'">показати DBSCAN</button>
-      </div>
-    </div>
-
-    <div class="lab__stats" v-if="mode !== 'km'">
-      <div class="lab__stat"><b>{{ res.k }}</b><span>знайдено кластерів</span></div>
-      <div class="lab__stat" :class="res.noise > pts.length * 0.3 ? 'is-warm' : ''">
-        <b>{{ res.noise }}</b><span>точок у шумі ({{ noisePct }} %)</span>
-      </div>
-      <div class="lab__stat" :class="res.ari > 0.8 ? 'is-green' : res.ari < 0.4 ? 'is-warm' : ''">
-        <b>{{ fmt(res.ari) }}</b><span>ARI зі справжніми групами</span>
-      </div>
-      <div class="lab__stat">
-        <b>{{ fmt(mode === 'db' ? bestDb : bestHdb) }}</b>
-        <span>найкраще, що дає цей метод на цьому наборі</span>
+      <div class="lab__stat" :class="run.ari > 0.9 ? 'is-green' : run.ari < 0.4 ? 'is-warm' : ''">
+        <b data-check="ari">{{ f(run.ari) }}</b><span>ARI на 400 точках півмісяців</span>
       </div>
     </div>
     <div class="lab__stats" v-else>
-      <div class="lab__stat"><b>{{ kmK }}</b><span>кластерів задано вручну</span></div>
-      <div class="lab__stat is-warm"><b>0</b><span>точок у шумі — K-means бере всіх</span></div>
-      <div class="lab__stat" :class="cur.km[String(kmK)].ari > 0.8 ? 'is-green' : ''">
-        <b>{{ fmt(cur.km[String(kmK)].ari) }}</b><span>ARI зі справжніми групами</span>
-      </div>
+      <div class="lab__stat"><b>2</b><span>кластери задано вручну</span></div>
+      <div class="lab__stat is-warm"><b>0</b><span>точок шуму — K-means бере всіх</span></div>
+      <div class="lab__stat"><b data-check="km-ari">{{ f(d.km.ari) }}</b><span>ARI на 400 точках півмісяців</span></div>
     </div>
 
     <p class="lab__note">
-      На півмісяцях видно головну перевагу: DBSCAN знаходить два серпи, бо йде за
-      щільністю, а не за відстанню до центра — перемкніться на K-means і побачите,
-      що той ріже їх навпіл поперек. Але візьміть третій набір, де щільна група
-      сусідить із розрідженою: жодне ε не годиться одразу для обох. Мале — і
-      розріджена група цілком іде в шум; велике — і щільна злипається із сусідами.
-      Саме цю ваду знімає HDBSCAN — кнопка поруч, — який перебирає цілий діапазон
-      радіусів замість одного. Параметр minPts діє м'якше: він задає, скільки
-      сусідів робить точку ядром, і головно впливає на те, що вважати шумом.
-    </p>
-
-    <p class="lab__note">
-      Тепер про ARI, який з'явився в нижньому ряду. Він порівнює знайдені групи
-      зі справжніми, і саме тут ховається головна пастка кластеризації: у
-      реальній задачі цього числа у вас немає. Подивіться на дві останні
-      плашки. Найкраще, чого досягає DBSCAN на цьому наборі, зазвичай не гірше
-      за HDBSCAN, а часом і краще — але це «найкраще» знайдене перебором по
-      всій сітці ε × minPts, тобто з підглядуванням у відповідь. Посуньте ε на
-      один крок від найкращого значення й подивіться, як падає ARI: у DBSCAN
-      падіння різке, у HDBSCAN між сусідніми значеннями мінімального розміру —
-      плавне. Перевага HDBSCAN не в тому, що його пік вищий, а в тому, що біля
-      піку рівніше — і на нього легше потрапити, коли перевірити нічим.
+      При ε = 0,203 зі зламу DBSCAN знаходить обидва півмісяці: ARI 0,995, шум 26 точок,
+      з них 25 — точки фону. Зменште ε до 0,10 — півмісяці розсипаються на десятки
+      дрібних кластерів; збільште до 0,40 — зливаються в один. K-means на тих самих
+      даних ріже півмісяці прямою: ARI 0,475, і жодної точки шуму.
     </p>
   </div>
 </template>
@@ -171,11 +92,13 @@ const fmt = (v: number) => v.toFixed(2).replace('.', ',')
 <style scoped>
 .db__plot {
   width: 100%;
+  max-width: 560px;
   height: auto;
   display: block;
   border: 1px solid var(--uk-line);
   border-radius: 8px;
   background: var(--vp-c-bg);
-  margin: 0.4rem 0 0.8rem;
+  margin: 0.4rem auto 0.8rem;
 }
+.db__x line { stroke: #B3312C; stroke-width: 1.4; }
 </style>

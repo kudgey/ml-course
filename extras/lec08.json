@@ -1,5 +1,5 @@
 {
- "K-means++ обирає стартові центри розумно": {
+ "3.1. Старт: кілька запусків і k-means++": {
   "materials": [
    {
     "title": "Arthur D., Vassilvitskii S. k-means++: The Advantages of Careful Seeding (2007)",
@@ -15,13 +15,13 @@
    }
   ]
  },
- "Вибір K: метод ліктя і середній силует": {
+ "3.2. Вибір K: лікоть і силует на Wine": {
   "materials": [
    {
     "title": "scikit-learn · Selecting the number of clusters with silhouette analysis",
     "url": "https://scikit-learn.org/stable/auto_examples/cluster/plot_kmeans_silhouette_analysis.html",
     "kind": "документація",
-    "note": "Силуетний профіль для кількох K поруч — саме той аналіз, що в сусідньому розділі."
+    "note": "Силуетні профілі для кількох K поруч — продовження рис. 7 цього розділу на синтетичних даних."
    },
    {
     "title": "scikit-learn · оцінювання кластеризації",
@@ -31,7 +31,7 @@
    }
   ]
  },
- "DBSCAN: кластер як щільна область": {
+ "5.1. DBSCAN: кластер як щільна область": {
   "materials": [
    {
     "title": "Ester M. та ін. A Density-Based Algorithm for Discovering Clusters (1996)",
@@ -47,7 +47,7 @@
    }
   ]
  },
- "Ієрархічна кластеризація будує дерево": {
+ "5.5. Дерево злиттів: ієрархічна кластеризація": {
   "materials": [
    {
     "title": "SciPy · Hierarchical clustering (scipy.cluster.hierarchy)",
@@ -63,7 +63,7 @@
    }
   ]
  },
- "Суміш гаусіанів знімає обидва обмеження": {
+ "6.1. Від K-means до суміші гаусіанів": {
   "materials": [
    {
     "title": "scikit-learn · Gaussian mixture models",
@@ -73,7 +73,7 @@
    }
   ]
  },
- "DBSCAN різко реагує на зміну ε": {
+ "5.3. Півмісяці: DBSCAN проти K-means": {
   "widget": "DbscanLab"
  }
 }
