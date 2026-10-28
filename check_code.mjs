@@ -5,7 +5,7 @@
  *
  * Для кожної лекції з .vitepress/dist перевіряє:
  *   · код згорнуто за замовчуванням — тіло кожного <CodeFold> не видно;
- *   · клік по шапці першого блока показує код, повторний — ховає;
+ *   · клік по шапці першого блока поза згорнутою перевіркою показує код, повторний — ховає;
  *   · під кожним блоком із виводом (<RunOutput>) вивід видно одразу
  *     і є рядок «На що дивитися»;
  *   · фрагменти (fragment) не мають виводу;
@@ -55,7 +55,7 @@ for (const path of pages) {
     await p.addStyleTag({ content: 'html { scroll-behavior: auto !important }' })
     // до гідратації Vue кнопка ще без обробника: чекаємо, поки застосунок змонтується
     await p.waitForFunction(() => !!document.querySelector('#app')?.__vue_app__, { timeout: 30000 })
-    const head = await p.$('.cf .cf__head')
+    const head = await p.$('.cf:not(details .cf) .cf__head')
     const until = f => p.waitForFunction(f, { timeout: 10000 }).then(() => true, () => false)
     // Шапку ставимо в центр екрана (біля краю її накриває закріплена навігація)
     // і чекаємо, поки вона перестане рухатися: ліниві рисунки вище догружаються
@@ -80,7 +80,7 @@ for (const path of pages) {
       onTop = await settle()
       await head.click()
       opened = await until(() => {
-        const body = document.querySelector('.cf .cf__body')
+        const body = document.querySelector('.cf:not(details .cf) .cf__body')
         return body.getClientRects().length > 0 && body.querySelector('pre').getBoundingClientRect().height > 20
       })
     }
@@ -89,7 +89,7 @@ for (const path of pages) {
     for (let attempt = 0; attempt < 3 && opened && !closed; attempt++) {
       await settle()
       await head.click()
-      closed = await until(() => document.querySelector('.cf .cf__body').getClientRects().length === 0)
+      closed = await until(() => document.querySelector('.cf:not(details .cf) .cf__body').getClientRects().length === 0)
     }
     toggle = opened && closed ? 'ok' : `відкрився=${opened} закрився=${closed}`
     if (toggle !== 'ok') problems.push(`${path}: клік по шапці: ${toggle}`)
