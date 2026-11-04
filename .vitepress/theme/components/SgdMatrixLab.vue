@@ -79,7 +79,7 @@ const curve = states.map((s, t) => `${cx(t)},${cy(s.rmse)}`).join(' ')
         <p class="sm__head">Крок <b data-check="step">{{ step }}</b> із {{ d.maxSteps }}<template v-if="step"> · епоха {{ Math.ceil(step / EPOCH) }}</template></p>
         <template v-if="cur.info">
           <p>клітинка {{ d.rows[cur.info.a] }}, {{ d.cols[cur.info.b] }}: {{ f(cur.info.x) }}</p>
-          <p>прогноз <b data-check="pred">{{ f(cur.info.pred) }}</b>, помилка e = <b data-check="e">{{ f(cur.info.e) }}</b></p>
+          <p>прогноз <b data-check="pred">{{ f(cur.info.pred) }}</b>, залишок e = <b data-check="e">{{ f(cur.info.e) }}</b></p>
           <p>z: {{ f(cur.info.z) }} → <b data-check="z">{{ f(cur.info.zn) }}</b></p>
           <p>w: {{ f(cur.info.w) }} → <b data-check="w">{{ f(cur.info.wn) }}</b></p>
           <p>новий прогноз <b data-check="next">{{ f(cur.info.next) }}</b></p>
@@ -94,7 +94,7 @@ const curve = states.map((s, t) => `${cx(t)},${cy(s.rmse)}`).join(' ')
       <button class="lab__btn" :disabled="step === 0" @click="go(0)">спочатку</button>
     </div>
 
-    <svg :viewBox="`0 0 ${CW} ${CH}`" class="sm__plot" role="img" aria-label="Помилка на відомих клітинках за кроками">
+    <svg :viewBox="`0 0 ${CW} ${CH}`" class="sm__plot" role="img" aria-label="RMSE на відомих клітинках за кроками">
       <line :x1="PL" :x2="CW - PR" :y1="cy(0)" :y2="cy(0)" class="sm__axis" />
       <line :x1="PL" :x2="PL" :y1="PT" :y2="cy(0)" class="sm__axis" />
       <text :x="PL - 5" :y="cy(0) + 4" text-anchor="end" class="sm__tick">0</text>

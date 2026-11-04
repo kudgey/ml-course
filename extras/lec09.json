@@ -14,7 +14,15 @@
   "widget": "SgdMatrixLab"
  },
  "4.2. Чого на карті не можна читати": {
-  "widget": "TsneGallery"
+  "widget": "TsneGallery",
+  "materials": [
+   {
+    "title": "Distill · How to Use t-SNE Effectively",
+    "url": "https://distill.pub/2016/misread-tsne/",
+    "kind": "стаття",
+    "note": "Інтерактивні приклади: що карта t-SNE показує, а що лише здається."
+   }
+  ]
  },
  "6.2. Результат: вибір параметрів і тест": {
   "materials": [
