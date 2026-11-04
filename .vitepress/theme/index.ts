@@ -17,6 +17,9 @@ import KMeansLab from './components/KMeansLab.vue'
 import ActivationLab from './components/ActivationLab.vue'
 import RegularizationLab from './components/RegularizationLab.vue'
 import PCALab from './components/PCALab.vue'
+import DirectionLab from './components/DirectionLab.vue'
+import SgdMatrixLab from './components/SgdMatrixLab.vue'
+import TsneGallery from './components/TsneGallery.vue'
 import KnnLab from './components/KnnLab.vue'
 import PreprocessLab from './components/PreprocessLab.vue'
 import ConvolutionLab from './components/ConvolutionLab.vue'
@@ -62,6 +65,9 @@ export default {
     app.component('ActivationLab', ActivationLab)
     app.component('RegularizationLab', RegularizationLab)
     app.component('PCALab', PCALab)
+    app.component('DirectionLab', DirectionLab)
+    app.component('SgdMatrixLab', SgdMatrixLab)
+    app.component('TsneGallery', TsneGallery)
     app.component('KnnLab', KnnLab)
     app.component('PreprocessLab', PreprocessLab)
     app.component('ConvolutionLab', ConvolutionLab)
