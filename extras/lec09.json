@@ -1,5 +1,5 @@
 {
- "2.1. Яку пряму обрати": {
+ "2.1. Які ваги взяти": {
   "materials": [
    {
     "title": "Setosa · Principal Component Analysis explained visually",
@@ -16,13 +16,13 @@
  "4.2. Чого на карті не можна читати": {
   "widget": "TsneGallery"
  },
- "6.2. Результат: параметри на валідації, тест один раз": {
+ "6.2. Результат: вибір параметрів і тест": {
   "materials": [
    {
     "title": "Koren Y., Bell R., Volinsky C. Matrix Factorization Techniques for Recommender Systems",
     "url": "https://datajobs.com/data-science-repo/Recommender-Systems-[Netflix].pdf",
     "kind": "PDF",
-    "note": "Стаття про розклад зі зсувами: джерело рис. 20 і чисел про Netflix."
+    "note": "Стаття про розклад зі зсувами: джерело чисел про Netflix."
    },
    {
     "title": "MovieLens — набори даних GroupLens",

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 /**
  * SGD на п'яти квартирах із закритою орендою D (лекція 09, розділ 5.1): один
- * шаблон, η = 0,1, ρ = 0,05. Кроки йдуть по відомих клітинках рядками, перший
+ * шаблон, η = 0,1, без штрафу. Кроки йдуть по відомих клітинках рядками, перший
  * крок — рівно блок «Розрахунок: один крок». Формули — (7).
  * Дані — tools/gen_lec09_widgets.py.
  */
@@ -60,9 +60,9 @@ const curve = states.map((s, t) => `${cx(t)},${cy(s.rmse)}`).join(' ')
 
     <div class="sm__wrap">
       <table class="sm__grid">
-        <thead><tr><th></th><th>вага z</th><th v-for="(c, b) in d.cols" :key="b">{{ c }}</th></tr></thead>
+        <thead><tr><th></th><th>внесок z</th><th v-for="(c, b) in d.cols" :key="b">{{ c }}</th></tr></thead>
         <tbody>
-          <tr><th>шаблон w</th><td class="is-empty"></td><td v-for="(w, b) in cur.W" :key="b" class="sm__par">{{ f(w) }}</td></tr>
+          <tr><th>вага w</th><td class="is-empty"></td><td v-for="(w, b) in cur.W" :key="b" class="sm__par">{{ f(w) }}</td></tr>
           <tr v-for="(row, a) in M" :key="a">
             <th>{{ d.rows[a] }}</th>
             <td class="sm__par">{{ f(cur.Z[a]) }}</td>
@@ -110,8 +110,8 @@ const curve = states.map((s, t) => `${cx(t)},${cy(s.rmse)}`).join(' ')
     </div>
 
     <p class="lab__note">
-      За 20 епох (180 кроків) RMSE на відомих клітинках падає до 0,063, а закрита оренда D виходить
-      близько 510 доларів, хоча в навчанні ця клітинка не брала участі.
+      За 20 епох (180 кроків) RMSE на відомих клітинках падає до 0,033, а закрита оренда D виходить
+      близько 515 доларів, хоча в навчанні ця клітинка не брала участі.
     </p>
   </div>
 </template>

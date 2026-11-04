@@ -1,7 +1,7 @@
 /**
  * Звірка віджетів Л09 із текстом і даними генератора (tools/gen_lec09_widgets.py):
- * PCALab (K = 21), DirectionLab (кути 0°, 45°, 90°), SgdMatrixLab (перший крок =
- * блок «Розрахунок: один крок», 180 кроків), TsneGallery (довіра дев'яти карт).
+ * PCALab (K = 21), DirectionLab (повороти 0°, 45°, 90°, 135°), SgdMatrixLab (перший крок =
+ * блок «Розрахунок: один крок», 180 кроків), TsneGallery (збережені сусіди дев'яти карт).
  *
  *   node check_lec09_widgets.mjs http://localhost:8235
  */
@@ -37,14 +37,14 @@ await click(PC, '.lab__pill', 'K = 2')
 eq('PCALab K = 2, частка', await read(PC, '.lab__stat b'), '28,5 %')
 
 // DirectionLab: дисперсія і помилка рахуються за визначенням
-const DL = lab('Кут прямої')
+const DL = lab('Ваги нової ознаки')
 const stat = a => {
   const c = Math.cos(a * Math.PI / 180), s = Math.sin(a * Math.PI / 180)
   let v = 0, e = 0
   for (const [x, y] of dir.X) { const z = x * c + y * s; v += z * z; e += (x - z * c) ** 2 + (y - z * s) ** 2 }
   return [v / dir.X.length, e / dir.X.length]
 }
-for (const a of [0, 45, 90, 100]) {
+for (const a of [0, 45, 90, 135]) {
   await slide(DL, a)
   const [v, e] = stat(a)
   eq(`DirectionLab ${a}°, дисперсія`, await read(DL, '[data-check="var"]'), uk(v, 3))
@@ -53,7 +53,9 @@ for (const a of [0, 45, 90, 100]) {
 }
 await slide(DL, 45)
 eq('DirectionLab 45°, дисперсія', await read(DL, '[data-check="var"]'), '1,996')
-eq('DirectionLab 45°, частка', await read(DL, '[data-check="share"]'), '99,8 %')
+eq('DirectionLab 45°, ваги', await read(DL, '[data-check="w"]'), '0,707; 0,707')
+await click(DL, '.lab__pill', 'оренда мінус площа')
+eq('DirectionLab 135°, дисперсія', await read(DL, '[data-check="var"]'), '0,004')
 
 // SgdMatrixLab: перший крок — числа блока «Розрахунок: один крок»
 const SM = lab('Навчання на таблиці')
@@ -67,17 +69,17 @@ eq('SgdMatrixLab крок 1, новий прогноз', await read(SM, '[data-c
 await click(SM, '.lab__btn', 'спочатку')
 for (let i = 0; i < 20; i++) await click(SM, '.lab__btn', 'епоха')
 eq('SgdMatrixLab 180 кроків, номер', await read(SM, '[data-check="step"]'), '180')
-eq('SgdMatrixLab 180 кроків, RMSE', await read(SM, '[data-check="rmse"]'), '0,063')
-eq('SgdMatrixLab 180 кроків, оренда D', await read(SM, '[data-check="rent"]'), '510')
+eq('SgdMatrixLab 180 кроків, RMSE', await read(SM, '[data-check="rmse"]'), '0,033')
+eq('SgdMatrixLab 180 кроків, оренда D', await read(SM, '[data-check="rent"]'), '515')
 
-// TsneGallery: довіра кожної з дев'яти карт
+// TsneGallery: збережені сусіди кожної з дев'яти карт
 const TG = lab("Дев'ять карт")
 for (const m of g.maps) {
   await p.evaluate(`(() => { const rows = ${TG}.querySelectorAll('.tg__row');
     [...rows[0].querySelectorAll('.lab__pill')].find(x => x.textContent.trim() === '${m.seed}').click();
     [...rows[1].querySelectorAll('.lab__pill')].find(x => x.textContent.trim() === '${m.perp}').click() })()`)
   await pause()
-  eq(`TsneGallery зерно ${m.seed}, перплексія ${m.perp}`, await read(TG, '[data-check="T"]'), uk(m.T, 3))
+  eq(`TsneGallery зерно ${m.seed}, перплексія ${m.perp}`, await read(TG, '[data-check="kept"]'), uk(m.kept, 1) + ' %')
 }
 
 if (errs.length) problems.push(`помилки JS: ${errs.slice(0, 2).join(' | ')}`)
