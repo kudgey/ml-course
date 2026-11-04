@@ -1,7 +1,7 @@
 /**
  * Звірка віджетів Л09 із текстом і даними генератора (tools/gen_lec09_widgets.py):
  * PCALab (K = 21), DirectionLab (кути 0°, 45°, 90°), SgdMatrixLab (перший крок =
- * блок «Розрахунок: один крок», 110 кроків), TsneGallery (довіра дев'яти карт).
+ * блок «Розрахунок: один крок», 180 кроків), TsneGallery (довіра дев'яти карт).
  *
  *   node check_lec09_widgets.mjs http://localhost:8235
  */
@@ -59,15 +59,16 @@ eq('DirectionLab 45°, частка', await read(DL, '[data-check="share"]'), '9
 const SM = lab('Навчання на таблиці')
 await click(SM, '.lab__btn', 'крок')
 eq('SgdMatrixLab крок 1, номер', await read(SM, '[data-check="step"]'), '1')
-eq('SgdMatrixLab крок 1, прогноз', await read(SM, '[data-check="pred"]'), '1,30')
-eq('SgdMatrixLab крок 1, e', await read(SM, '[data-check="e"]'), '3,70')
-eq('SgdMatrixLab крок 1, z', await read(SM, '[data-check="z"]'), '(1,40; 0,65)')
-eq('SgdMatrixLab крок 1, w', await read(SM, '[data-check="w"]'), '(1,46; 0,58)')
-eq('SgdMatrixLab крок 1, новий прогноз', await read(SM, '[data-check="next"]'), '2,43')
+eq('SgdMatrixLab крок 1, прогноз', await read(SM, '[data-check="pred"]'), '−0,25')
+eq('SgdMatrixLab крок 1, e', await read(SM, '[data-check="e"]'), '−1,16')
+eq('SgdMatrixLab крок 1, z', await read(SM, '[data-check="z"]'), '−0,56')
+eq('SgdMatrixLab крок 1, w', await read(SM, '[data-check="w"]'), '0,56')
+eq('SgdMatrixLab крок 1, новий прогноз', await read(SM, '[data-check="next"]'), '−0,31')
 await click(SM, '.lab__btn', 'спочатку')
-for (let i = 0; i < 10; i++) await click(SM, '.lab__btn', 'епоха')
-eq('SgdMatrixLab 110 кроків, номер', await read(SM, '[data-check="step"]'), '110')
-eq('SgdMatrixLab 110 кроків, RMSE', await read(SM, '[data-check="rmse"]'), '0,093')
+for (let i = 0; i < 20; i++) await click(SM, '.lab__btn', 'епоха')
+eq('SgdMatrixLab 180 кроків, номер', await read(SM, '[data-check="step"]'), '180')
+eq('SgdMatrixLab 180 кроків, RMSE', await read(SM, '[data-check="rmse"]'), '0,063')
+eq('SgdMatrixLab 180 кроків, оренда D', await read(SM, '[data-check="rent"]'), '510')
 
 // TsneGallery: довіра кожної з дев'яти карт
 const TG = lab("Дев'ять карт")
