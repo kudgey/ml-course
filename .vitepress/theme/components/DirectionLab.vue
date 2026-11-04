@@ -1,7 +1,7 @@
 <script setup lang="ts">
 /**
  * Напрям прямої ↔ дисперсія проєкцій і помилка реконструкції (лекція 09,
- * розділ 2.1, рис. 7). Дві стандартизовані ознаки Wine, ті самі 178 точок;
+ * розділ 2.1, рис. 8). П'ять квартир зі стандартизованими площею й орендою;
  * обидві величини рахуються тут-таки за визначенням, їхня сума завжди 2,00.
  * Дані — tools/gen_lec09_widgets.py.
  */
@@ -10,7 +10,7 @@ import d from '../../data/lec09_direction.json'
 
 const pts = d.X as number[][]
 const N = pts.length
-const angle = ref(20)
+const angle = ref(100)
 
 /** Середній квадрат проєкції і перпендикуляра для кута a (радіани). */
 function stats(a: number) {
@@ -26,11 +26,11 @@ function stats(a: number) {
 
 const rad = computed(() => (angle.value * Math.PI) / 180)
 const cur = computed(() => stats(rad.value))
-const f = (v: number, nd = 4) => v.toFixed(nd).replace('.', ',')
+const f = (v: number, nd = 3) => v.toFixed(nd).replace('.', ',')
 const pct = computed(() => f((100 * cur.value[0]) / (cur.value[0] + cur.value[1]), 1))
 
-// ліва панель: хмара, пряма, перпендикуляри кожної третьої точки
-const S = 300, R = 3.4
+// ліва панель: квартири, пряма, перпендикуляри
+const S = 300, R = 2.3
 const sx = (v: number) => S / 2 + (v / R) * (S / 2 - 8)
 const sy = (v: number) => S / 2 - (v / R) * (S / 2 - 8)
 const line = computed(() => {
@@ -39,7 +39,7 @@ const line = computed(() => {
 })
 const perps = computed(() => {
   const c = Math.cos(rad.value), s = Math.sin(rad.value)
-  return pts.filter((_, i) => i % 3 === 0).map(([x, y]) => {
+  return pts.map(([x, y]) => {
     const z = x * c + y * s
     return { x1: sx(x), y1: sy(y), x2: sx(z * c), y2: sy(z * s) }
   })
@@ -64,16 +64,19 @@ const pathE = curves.map(c => `${cx(c.a)},${cy(c.e)}`).join(' ')
       <div>
         <div class="lab__title">Кут прямої: дисперсія проєкцій і помилка реконструкції</div>
         <div class="lab__sub">
-          Ті самі 178 вин, що на рис. 6 і 7: дві стандартизовані ознаки, кореляція {{ f(d.r) }}.
-          Обертайте пряму: червоні відрізки — перпендикуляри, показано кожен третій.
+          Ті самі п'ять квартир, що на рис. 7 і 8: стандартизовані площа й оренда, кореляція {{ f(d.r) }}.
+          Обертайте пряму: червоні відрізки — відстані від квартир до прямої.
         </div>
       </div>
     </div>
 
     <div class="dl__plots">
-      <svg :viewBox="`0 0 ${S} ${S}`" class="dl__plot" role="img" aria-label="Хмара точок і пряма під заданим кутом">
+      <svg :viewBox="`0 0 ${S} ${S}`" class="dl__plot" role="img" aria-label="П'ять квартир і пряма під заданим кутом">
         <line v-for="(p, i) in perps" :key="i" v-bind="p" class="dl__perp" />
-        <circle v-for="(p, i) in pts" :key="'p' + i" :cx="sx(p[0])" :cy="sy(p[1])" r="2.4" class="dl__pt" />
+        <template v-for="(p, i) in pts" :key="'p' + i">
+          <circle :cx="sx(p[0])" :cy="sy(p[1])" r="5" class="dl__pt" />
+          <text :x="sx(p[0]) - 9" :y="sy(p[1]) - 7" class="dl__name">{{ d.names[i] }}</text>
+        </template>
         <line v-bind="line" class="dl__line" />
       </svg>
       <svg :viewBox="`0 0 ${CW} ${CH}`" class="dl__plot" role="img" aria-label="Дисперсія проєкцій і помилка реконструкції за кутом">
@@ -110,7 +113,7 @@ const pathE = curves.map(c => `${cx(c.a)},${cy(c.e)}`).join(' ')
 
     <p class="lab__note">
       За будь-якого кута сума дорівнює 2,00: це теорема Піфагора, усереднена за точками.
-      При 45° дисперсія найбільша, 1,8646, а помилка найменша, 0,1354; при 0° і 90° обидві
+      При 45° дисперсія найбільша, 1,996, а помилка найменша, 0,004. При 0° і 90° обидві
       дорівнюють 1, бо пряма йде вздовж однієї з ознак.
     </p>
   </div>
@@ -131,8 +134,9 @@ const pathE = curves.map(c => `${cx(c.a)},${cy(c.e)}`).join(' ')
   border-radius: 8px;
   background: var(--vp-c-bg);
 }
-.dl__pt { fill: #8A8A96; opacity: 0.8; }
-.dl__perp { stroke: #B3312C; stroke-width: 0.9; opacity: 0.75; }
+.dl__pt { fill: #2F6DB5; }
+.dl__name { font-size: 14px; fill: var(--vp-c-text-1); }
+.dl__perp { stroke: #B3312C; stroke-width: 1.6; }
 .dl__line { stroke: #C2571A; stroke-width: 2.6; }
 .dl__axis { stroke: var(--vp-c-text-3); stroke-width: 1; }
 .dl__tick { font-size: 13px; fill: var(--vp-c-text-2); }

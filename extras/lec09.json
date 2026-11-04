@@ -1,21 +1,5 @@
 {
- "1.2. Цифри й модель X ≈ ZW": {
-  "materials": [
-   {
-    "title": "scikit-learn · Faces dataset decompositions",
-    "url": "https://scikit-learn.org/stable/auto_examples/decomposition/plot_faces_decomposition.html",
-    "kind": "документація",
-    "note": "PCA, NMF і словникове навчання на одному наборі облич: видно, як обмеження на Z і W змінюють компоненти."
-   },
-   {
-    "title": "Lee D., Seung S. Learning the parts of objects by non-negative matrix factorization (1999)",
-    "url": "https://www.nature.com/articles/44565",
-    "kind": "стаття",
-    "note": "Стаття в Nature, з якої почалося широке застосування NMF."
-   }
-  ]
- },
- "2.1. Перпендикуляр, дисперсія, помилка": {
+ "2.1. Яку пряму обрати": {
   "materials": [
    {
     "title": "Setosa · Principal Component Analysis explained visually",
@@ -26,26 +10,19 @@
   ],
   "widget": "DirectionLab"
  },
- "3.5. Масштаб: дві різні 99,8 %": {
-  "materials": [
-   {
-    "title": "scikit-learn · Importance of Feature Scaling",
-    "url": "https://scikit-learn.org/stable/auto_examples/preprocessing/plot_scaling_importance.html",
-    "kind": "документація",
-    "note": "Той самий ефект на Wine: рис. 12 узято звідси."
-   }
-  ]
- },
- "4.4. SGD і ALS": {
+ "5.1. Навчання крок за кроком": {
   "widget": "SgdMatrixLab"
  },
- "4.5. Результат: відбір на валідації, тест один раз": {
+ "4.2. Чого на карті не можна читати": {
+  "widget": "TsneGallery"
+ },
+ "6.2. Результат: параметри на валідації, тест один раз": {
   "materials": [
    {
     "title": "Koren Y., Bell R., Volinsky C. Matrix Factorization Techniques for Recommender Systems",
     "url": "https://datajobs.com/data-science-repo/Recommender-Systems-[Netflix].pdf",
     "kind": "PDF",
-    "note": "Стаття про розклад зі зсувами: джерело рис. 14 і чисел про Netflix."
+    "note": "Стаття про розклад зі зсувами: джерело рис. 20 і чисел про Netflix."
    },
    {
     "title": "MovieLens — набори даних GroupLens",
@@ -55,10 +32,7 @@
    }
   ]
  },
- "5.2. Чого на карті не можна читати": {
-  "widget": "TsneGallery"
- },
- "6.2. Межі PCA і ядровий місток": {
+ "Межі й вибір методу": {
   "materials": [
    {
     "title": "scikit-learn · Kernel PCA",

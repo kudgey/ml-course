@@ -1,7 +1,7 @@
 /**
  * Звірка віджетів Л09 із текстом і даними генератора (tools/gen_lec09_widgets.py):
  * PCALab (K = 21), DirectionLab (кути 0°, 45°, 90°), SgdMatrixLab (перший крок =
- * блок «Розрахунок: один крок SGD», 110 кроків), TsneGallery (довіра дев'яти карт).
+ * блок «Розрахунок: один крок», 110 кроків), TsneGallery (довіра дев'яти карт).
  *
  *   node check_lec09_widgets.mjs http://localhost:8235
  */
@@ -44,19 +44,19 @@ const stat = a => {
   for (const [x, y] of dir.X) { const z = x * c + y * s; v += z * z; e += (x - z * c) ** 2 + (y - z * s) ** 2 }
   return [v / dir.X.length, e / dir.X.length]
 }
-for (const a of [0, 20, 45, 90]) {
+for (const a of [0, 45, 90, 100]) {
   await slide(DL, a)
   const [v, e] = stat(a)
-  eq(`DirectionLab ${a}°, дисперсія`, await read(DL, '[data-check="var"]'), uk(v, 4))
-  eq(`DirectionLab ${a}°, помилка`, await read(DL, '[data-check="err"]'), uk(e, 4))
+  eq(`DirectionLab ${a}°, дисперсія`, await read(DL, '[data-check="var"]'), uk(v, 3))
+  eq(`DirectionLab ${a}°, помилка`, await read(DL, '[data-check="err"]'), uk(e, 3))
   eq(`DirectionLab ${a}°, сума`, await read(DL, '[data-check="sum"]'), '2,00')
 }
 await slide(DL, 45)
-eq('DirectionLab 45°, дисперсія', await read(DL, '[data-check="var"]'), '1,8646')
-eq('DirectionLab 45°, частка', await read(DL, '[data-check="share"]'), '93,2 %')
+eq('DirectionLab 45°, дисперсія', await read(DL, '[data-check="var"]'), '1,996')
+eq('DirectionLab 45°, частка', await read(DL, '[data-check="share"]'), '99,8 %')
 
-// SgdMatrixLab: перший крок — числа блока «Розрахунок: один крок SGD»
-const SM = lab('SGD на матриці')
+// SgdMatrixLab: перший крок — числа блока «Розрахунок: один крок»
+const SM = lab('Навчання на таблиці')
 await click(SM, '.lab__btn', 'крок')
 eq('SgdMatrixLab крок 1, номер', await read(SM, '[data-check="step"]'), '1')
 eq('SgdMatrixLab крок 1, прогноз', await read(SM, '[data-check="pred"]'), '1,30')

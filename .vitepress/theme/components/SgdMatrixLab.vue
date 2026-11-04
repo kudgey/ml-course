@@ -1,8 +1,8 @@
 <script setup lang="ts">
 /**
- * SGD на умовній матриці 4 × 4 із пропусками (лекція 09, розділ 4.4): K = 2,
- * η = 0,1, ρ = 0,05, зсувів немає. Кроки йдуть по відомих клітинках рядками,
- * перший крок — рівно блок «Розрахунок: один крок SGD». Формули — (8).
+ * SGD на умовній таблиці 4 × 4 із дірками (лекція 09, розділ 5.1): K = 2,
+ * η = 0,1, ρ = 0,05. Кроки йдуть по відомих клітинках рядками,
+ * перший крок — рівно блок «Розрахунок: один крок». Формули — (7).
  * Дані — tools/gen_lec09_widgets.py.
  */
 import { ref, computed } from 'vue'
@@ -53,20 +53,20 @@ const curve = states.map((s, t) => `${cx(t)},${cy(s.rmse)}`).join(' ')
   <div class="lab">
     <div class="lab__head">
       <div>
-        <div class="lab__title">SGD на матриці з пропусками</div>
+        <div class="lab__title">Навчання на таблиці з дірками</div>
         <div class="lab__sub">
-          Числа умовні, ті самі, що в розрахунку цього розділу: K = 2, η = 0,1, ρ = 0,05, зсувів немає.
-          Великі числа — відомі оцінки, дрібні — поточний прогноз ⟨z, w⟩; порожні клітинки заповнює лише модель.
+          Числа умовні, ті самі, що в розрахунку цього розділу: K = 2, η = 0,1, ρ = 0,05.
+          Великі числа — відомі клітинки, дрібні — поточний прогноз ⟨z, w⟩; порожні клітинки заповнює лише модель.
         </div>
       </div>
     </div>
 
     <div class="sm__wrap">
       <table class="sm__grid">
-        <thead><tr><th></th><th v-for="b in 4" :key="b">ф{{ b }}</th></tr></thead>
+        <thead><tr><th></th><th v-for="b in 4" :key="b">с{{ b }}</th></tr></thead>
         <tbody>
           <tr v-for="(row, a) in M" :key="a">
-            <th>г{{ a + 1 }}</th>
+            <th>р{{ a + 1 }}</th>
             <td v-for="(x, b) in row" :key="b"
                 :class="{ 'is-on': cur.info && cur.info.a === a && cur.info.b === b, 'is-empty': x === null }">
               <b v-if="x !== null">{{ x }}</b>
@@ -79,7 +79,7 @@ const curve = states.map((s, t) => `${cx(t)},${cy(s.rmse)}`).join(' ')
       <div class="sm__info">
         <p class="sm__head">Крок <b data-check="step">{{ step }}</b> із {{ d.maxSteps }}<template v-if="step"> · епоха {{ Math.ceil(step / EPOCH) }}</template></p>
         <template v-if="cur.info">
-          <p>клітинка г{{ cur.info.a + 1 }}, ф{{ cur.info.b + 1 }}: оцінка {{ cur.info.x }}</p>
+          <p>клітинка р{{ cur.info.a + 1 }}, с{{ cur.info.b + 1 }}: значення {{ cur.info.x }}</p>
           <p>прогноз <b data-check="pred">{{ f(cur.info.pred) }}</b>, помилка e = <b data-check="e">{{ f(cur.info.e) }}</b></p>
           <p>z: {{ vec(cur.info.z) }} → <b data-check="z">{{ vec(cur.info.zn) }}</b></p>
           <p>w: {{ vec(cur.info.w) }} → <b data-check="w">{{ vec(cur.info.wn) }}</b></p>
@@ -111,7 +111,7 @@ const curve = states.map((s, t) => `${cx(t)},${cy(s.rmse)}`).join(' ')
 
     <p class="lab__note">
       За десять епох (110 кроків) RMSE на відомих клітинках падає до 0,093. Порожні клітинки в суму не
-      входять, а прогноз для них складається сам: глядач г3 схожий на г4, тому для ф3 дістає високу оцінку.
+      входять, а прогноз для них складається сам: рядок р3 схожий на р4, тому в стовпці с3 дістає високе значення.
     </p>
   </div>
 </template>
