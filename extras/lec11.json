@@ -10,7 +10,17 @@
    }
   ]
  },
- "2.4. Згорткова мережа для цифр": {
+ "Крок 3. Згорткова мережа на цифрах": {
+  "materials": [
+   {
+    "title": "Kingma D., Ba J. Adam: A Method for Stochastic Optimization (2014)",
+    "url": "https://arxiv.org/abs/1412.6980",
+    "kind": "стаття",
+    "note": "Оригінальна стаття: алгоритм 1 — та сама формула з двома ковзними середніми."
+   }
+  ]
+ },
+ "2.5. Згорткова мережа для цифр": {
   "materials": [
    {
     "title": "LeCun та ін. Gradient-Based Learning Applied to Document Recognition (1998)",
@@ -26,23 +36,13 @@
    }
   ]
  },
- "4.2. Обхідне з'єднання": {
+ "4.3. Обхідне з'єднання": {
   "materials": [
    {
     "title": "He та ін. Deep Residual Learning for Image Recognition (2016)",
     "url": "https://arxiv.org/pdf/1512.03385",
     "kind": "PDF",
     "note": "Стаття про ResNet: глибший стек без обхідних з'єднань навчається гірше за мілкіший."
-   }
-  ]
- },
- "Крок 3. Згорткова мережа на цифрах": {
-  "materials": [
-   {
-    "title": "Kingma D., Ba J. Adam: A Method for Stochastic Optimization (2014)",
-    "url": "https://arxiv.org/abs/1412.6980",
-    "kind": "стаття",
-    "note": "Оригінальна стаття: алгоритм 1 — та сама формула з двома ковзними середніми."
    }
   ]
  }
